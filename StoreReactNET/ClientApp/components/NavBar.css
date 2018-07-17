@@ -1,0 +1,52 @@
+﻿#navigationBar 
+{
+    background: #222;
+}
+
+#navigationBar a 
+{
+    color: white;
+}
+#navigationBar a:hover 
+{
+    color: #FF9700
+}
+#navOptions 
+{
+    cursor: pointer
+}
+#navOptions li > a 
+{
+    line-height: 45px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+#accountDropdown 
+{
+    background: #444;
+}
+@media (min-width: 767px) 
+{
+    #navigationBar 
+    {
+        height: 75px;
+    }
+
+    #navHeader 
+    {
+        line-height: 75px;
+    }
+
+    #navHeader > a 
+    {
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 45px;
+    }
+
+    #navOptions 
+    {
+        float: right;
+    }
+}
