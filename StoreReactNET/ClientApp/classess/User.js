@@ -1,9 +1,12 @@
 ﻿export class User
 {
-    constructor()
+    constructor(respondString)
     {
-        this.userID = 0;
-        this.userName = "";
-        this.userCart = "";
+        let respond = JSON.parse(respondString);
+
+        this.userID = respond.ID;
+        this.email = respond.Email;
+        this.firstName = respond.FirstName;
+        this.lastName = respond.LastName;
     }
 }

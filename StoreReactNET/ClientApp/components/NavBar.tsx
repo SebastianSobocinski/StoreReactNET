@@ -15,7 +15,6 @@ export class NavBar extends React.Component
     }
     componentWillReceiveProps(nextProps)
     {
-        console.log(nextProps)
         this.setState({ user: nextProps.data.user })
     }
     render()
@@ -30,13 +29,13 @@ export class NavBar extends React.Component
                         <li>
                             <a data-toggle="dropdown">Account</a>
                             <ul className="dropdown-menu" id="accountDropdown">
-                                    <li>
-                                    <NavLink to={'/login'} activeClassName="active" >
+                                <li>
+                                    <NavLink to={'/Account/Login'} activeClassName="active" >
                                         Log in
                                     </NavLink>
                                 </li>
-                                    <li>
-                                    <NavLink to={'/register'} activeClassName="active">
+                                <li>
+                                    <NavLink to={'/Account/Register'} activeClassName="active">
                                         Register
                                     </NavLink>
                                 </li>
@@ -53,11 +52,34 @@ export class NavBar extends React.Component
         }
         else 
         {
-            /*userNavbar = 
+            userNavbar = 
             (
-                <
+                <div className="navbar-collapse collapse">
+                    <ul id="navOptions" className="nav navbar-nav">
+                        <li>
+                            <NavLink to={'/Account/Profile'}>
+                                Welcome {this.state.user.firstName}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={'/store'} activeClassName="active">
+                                Products
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={'/Cart/Show'} activeClassName="active">
+                                <span id="shoppingCartIcon" className="navIcon glyphicon glyphicon-shopping-cart"><span id="shoppingCartCount">0</span></span><span id="cartValue">0,00 PLN</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={'/Account/Logout'} activeClassName="active">
+                                <span className="navIcon glyphicon glyphicon-log-out"></span>
+                            </NavLink>
+                        </li>
+                    </ul>
+                </div>
             )
-            */
+            
         }
         return (
         <div id="navigationBar" className="navbar navbar-inverse navbar-fixed-top">

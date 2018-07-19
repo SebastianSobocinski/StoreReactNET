@@ -21,11 +21,44 @@
     font-size: 15px;
     font-weight: bold;
 }
-
 #accountDropdown 
 {
     background: #444;
 }
+.navIcon 
+{
+    vertical-align: top;
+    font-size: 25px;
+    height: 45px;
+    line-height: 45px;
+    position: relative;
+}
+#shoppingCartIcon 
+{
+    padding-right: 10px;
+}
+
+#shoppingCartCount 
+{
+    text-align: center;
+    line-height: 13px;
+    font-weight: bold;
+    font-size: 15px;
+    display: block;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background: #0C5AA6;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+a:hover #shoppingCartCount 
+{
+    color: white;
+}
+
 @media (min-width: 767px) 
 {
     #navigationBar 

@@ -1,16 +1,20 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { Login } from './Login';
+
 
 import { NavBar } from './NavBar';
 import { Footer } from './Footer';
 import { Home } from './Home';
 import { User } from '../classess/User';
 
+import $ from 'jquery';
+
 export interface LayoutProps {
     children?: React.ReactNode;
 }
 
-export class App extends React.Component<LayoutProps, {}>
+export class App extends React.Component
 {
     constructor(props)
     {
@@ -23,6 +27,24 @@ export class App extends React.Component<LayoutProps, {}>
         this.getUser = this.getUser.bind(this);
         this.setUser = this.setUser.bind(this);
 
+    }
+    componentDidMount()
+    {
+        $.ajax(
+            {
+                type: "GET",
+                url: "api/Session/GetUserSession",
+                success: (respond) =>
+                {
+                    console.log(respond);
+                    if (respond.isEstablished)
+                    {
+                        let user = new User(respond.data)
+                        this.setUser(user);
+                    }
+
+                }
+            });
     }
     getUser()
     {
@@ -42,7 +64,7 @@ export class App extends React.Component<LayoutProps, {}>
     }
     public render()
     {
-        let navbarProps =
+        let mainProps =
         {
             user: this.state.user,
             getUser: this.getUser,
@@ -50,10 +72,11 @@ export class App extends React.Component<LayoutProps, {}>
         }
 
         return <div className='container-fluid'>
-            <NavBar data={navbarProps} />
+            <NavBar data={mainProps} />
             <div id="mainBody" className="container">
                 <Switch>
-                    <Route exact path="/" render={() => <Home /> } />
+                    <Route exact path="/" render={() => <Home />} />
+                    <Route path='/Account/Login' render={() => <Login data={mainProps}/>} />
                 </Switch>
             </div>
             <Footer />
