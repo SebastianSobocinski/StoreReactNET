@@ -5,13 +5,18 @@ import { User } from '../classess/User';
 
 export class NavBar extends React.Component
 {
-    constructor()
+    constructor(props)
     {
-        super();
+        super(props);
         this.state =
         {
-            user: null
+            user: this.props.data.user
         }
+    }
+    componentWillReceiveProps(nextProps)
+    {
+        console.log(nextProps)
+        this.setState({ user: nextProps.data.user })
     }
     render()
     {
@@ -59,7 +64,7 @@ export class NavBar extends React.Component
             <div id="navContainer" className="container">
                 <div id="navHeader" className="navbar-header">
                     <NavLink to={'/'} exact className="navbar-brand">
-                        StoreReactNET
+                            StoreReactNET
                     </NavLink>
 
                     <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">

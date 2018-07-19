@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Route } from 'react-router-dom';
-import { Layout } from './components/Layout';
+import { App } from './components/App';
 import { Home } from './components/Home';
 
-export const routes = <Layout>
-    <Route path='/' exact component={ Home } />
+export const routes = <Route path='/' component={App} />
 
-</Layout>;
+

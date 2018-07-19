@@ -22,11 +22,15 @@
 
   <ItemGroup>
     <None Remove="ClientApp\classess\User.js" />
+    <None Remove="ClientApp\components\App.tsx" />
+    <None Remove="ClientApp\components\Footer.tsx" />
     <None Remove="ClientApp\components\NavBar.tsx" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\classess\User.js" />
+    <TypeScriptCompile Include="ClientApp\components\Footer.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\App.tsx" />
     <TypeScriptCompile Include="ClientApp\components\NavBar.tsx" />
   </ItemGroup>
 

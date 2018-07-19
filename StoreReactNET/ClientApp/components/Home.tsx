@@ -3,9 +3,16 @@ import { RouteComponentProps } from 'react-router';
 
 export class Home extends React.Component<RouteComponentProps<{}>, {}>
 {
+    constructor(props)
+    {
+        super(props);
+        console.log(this.props);
+    }
+
+
     public render()
     {
-        return <h1>Hello, world!</h1>
+        return <h1>Home page!</h1>
 
     }
 }
