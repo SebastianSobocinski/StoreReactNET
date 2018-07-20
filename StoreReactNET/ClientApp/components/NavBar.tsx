@@ -3,6 +3,8 @@ import { Link, NavLink } from 'react-router-dom';
 import "./Navbar.css"
 import { User } from '../classess/User';
 
+import $ from 'jquery';
+
 export class NavBar extends React.Component
 {
     constructor(props)
@@ -17,6 +19,30 @@ export class NavBar extends React.Component
     {
         this.setState({ user: nextProps.data.user })
     }
+
+    componentDidUpdate()
+    {
+        let logout = document.getElementById('accountLogout');
+        if (logout != null)
+        {
+            logout.addEventListener('click', () =>
+            {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "api/Session/ClearSession",
+                        success: (respond) =>
+                        {
+                            if (respond.success)
+                            {
+                                window.location.href = "/";
+                            }
+                        }
+                    });
+            });
+        }
+    }
+
     render()
     {
         let userNavbar;
@@ -42,7 +68,7 @@ export class NavBar extends React.Component
                             </ul>
                         </li>
                         <li>
-                            <NavLink to={'/store'} activeClassName="active">
+                            <NavLink to={'/Store'} activeClassName="active">
                                 Products
                             </NavLink>
                         </li>
@@ -58,23 +84,23 @@ export class NavBar extends React.Component
                     <ul id="navOptions" className="nav navbar-nav">
                         <li>
                             <NavLink to={'/Account/Profile'}>
-                                Welcome {this.state.user.firstName}
+                                Welcome, {this.state.user.firstName}
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/store'} activeClassName="active">
+                            <NavLink to={'/Store'} activeClassName="active">
                                 Products
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/Cart/Show'} activeClassName="active">
+                            <NavLink to={'/Account/Cart'} activeClassName="active">
                                 <span id="shoppingCartIcon" className="navIcon glyphicon glyphicon-shopping-cart"><span id="shoppingCartCount">0</span></span><span id="cartValue">0,00 PLN</span>
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/Account/Logout'} activeClassName="active">
+                            <a id="accountLogout">
                                 <span className="navIcon glyphicon glyphicon-log-out"></span>
-                            </NavLink>
+                            </a>
                         </li>
                     </ul>
                 </div>

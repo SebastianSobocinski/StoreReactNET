@@ -31,5 +31,22 @@ namespace StoreReactNET.Controllers
 
             return Json(respond);
         }
+        [HttpPost]
+        public ActionResult ClearSession()
+        {
+            var respond = new
+            {
+                success = false
+            };
+
+            var session = HttpContext.Session;
+            session.Clear();
+
+            respond = new
+            {
+                success = true
+            };
+            return Json(respond);
+        }
     }
 }

@@ -29,11 +29,71 @@
 {
     margin-bottom: 20px;
 }
+#loginAlertBackground
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: grey;
+    z-index: 9999;
+    opacity: 0.6;
+
+}
+#loginAlertDiv 
+{
+    padding: 15px;
+    position: fixed;
+    background: #efefef;
+    top: 15%;
+    left: 15%;
+    width: 70%;
+    height: 250px;
+    z-index: 10000;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 30px -15px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 30px -15px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 30px -15px rgba(0,0,0,0.75);
+}
+#loginAlertMessage 
+{
+    margin: 20px auto;
+    display: table;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+#loginAlertButton
+{
+    position: absolute;
+    width: 50%;
+    bottom: 20px;
+    left: 25%;
+}
 @media (min-width: 767px) 
 {
     #loginForm 
     {
         width: 60%;
     }
+    #loginAlertDiv
+    {
+        width:40%;
+        left: 30%;
+    }
 
+}
+@media (min-width: 992px)
+{
+    #loginAlertDiv
+    {
+        width: 25%;
+        left: 37.5%;
+    }
+    #loginAlertButton
+    {
+        width: 100px;
+        left: calc(50% - 50px);
+    }
 }

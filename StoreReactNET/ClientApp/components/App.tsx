@@ -6,9 +6,11 @@ import { Login } from './Login';
 import { NavBar } from './NavBar';
 import { Footer } from './Footer';
 import { Home } from './Home';
+import { Store } from './Store';
 import { User } from '../classess/User';
 
 import $ from 'jquery';
+import './App.css';
 
 export interface LayoutProps {
     children?: React.ReactNode;
@@ -24,50 +26,41 @@ export class App extends React.Component
             user: null
         }
 
-        this.getUser = this.getUser.bind(this);
         this.setUser = this.setUser.bind(this);
 
     }
-    componentDidMount()
-    {
-        $.ajax(
-            {
-                type: "GET",
-                url: "api/Session/GetUserSession",
-                success: (respond) =>
-                {
-                    console.log(respond);
-                    if (respond.isEstablished)
-                    {
-                        let user = new User(respond.data)
-                        this.setUser(user);
-                    }
 
-                }
-            });
-    }
-    getUser()
+    async componentDidMount()
     {
-        return this.state.user;
+        await new Promise((resolve) =>
+        {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "api/Session/GetUserSession",
+                    success: (respond) =>
+                    {
+                        if (respond.isEstablished)
+                        {
+                            let user = new User(respond.data)
+                            this.setUser(user);
+                        }
+                        resolve();
+                    }
+                });
+        });
     }
+
     setUser(_user)
     {
         this.setState({ user: _user });
     }
-    renderChildren()
-    {
-        return React.Children.map(this.props.children, child =>
-        {
-            console.log(child);
-            return React.cloneElement(child, {name: "test"})
-        })
-    }
+
     public render()
     {
         let mainProps =
         {
             user: this.state.user,
-            getUser: this.getUser,
             setUser: this.setUser
         }
 
@@ -76,7 +69,10 @@ export class App extends React.Component
             <div id="mainBody" className="container">
                 <Switch>
                     <Route exact path="/" render={() => <Home />} />
-                    <Route path='/Account/Login' render={() => <Login data={mainProps}/>} />
+                    <Route exact path='/Account/Login' render={() => <Login data={mainProps} />} />
+                    <Route exact path="/Store" render={() => <Store />} />
+
+                    <Route path="/Store/:categoryID?/:productID?" render={(props) => <Store data={mainProps} {...props} />} />
                 </Switch>
             </div>
             <Footer />

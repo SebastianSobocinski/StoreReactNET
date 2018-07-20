@@ -18,7 +18,8 @@ export class Footer extends React.Component
             mainBody.style.paddingBottom = footerHeight + "px";
 
         });
-    }   
+    }  
+    
     render()
     {
         let spanStyle =
@@ -32,10 +33,10 @@ export class Footer extends React.Component
                         <div className="col-md-3 col-sm-4 col-xs-12 footer-box">
                             <p className="footer-header">Links</p>
                             <ol className="col-lg-12">
-                                <li><NavLink to={'/login'}>Login</NavLink></li>
-                                <li><NavLink to={'/register'}>Register</NavLink></li>
-                                <li><NavLink to={'/store'}>Products</NavLink></li>
-                                <li><NavLink to={'/'}></NavLink></li>
+                                <li><NavLink to={'/Account/Login'}>Login</NavLink></li>
+                                <li><NavLink to={'/Account/Register'}>Register</NavLink></li>
+                                <li><NavLink to={'/Store'}>Products</NavLink></li>
+                                <li><NavLink to={'/'}>Home</NavLink></li>
                             </ol>
                         </div>
                         <div className="col-md-3 col-sm-4 col-xs-12 footer-box">

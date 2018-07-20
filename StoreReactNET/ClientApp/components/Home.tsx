@@ -9,9 +9,7 @@ export class Home extends React.Component
     {
         super(props);
     }
-
-
-    public render()
+    render()
     {
         return <h1>Home page!</h1>
 
