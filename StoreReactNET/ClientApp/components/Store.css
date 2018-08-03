@@ -1,1 +1,14 @@
-﻿
+﻿#storeContainer
+{
+    padding: 0;
+    margin-top: 10px;
+}
+#storeContainer aside 
+{
+    height: 200px;
+}
+#productsContainer 
+{
+    padding: 0;
+    border-left: 1px solid #efefef;
+}

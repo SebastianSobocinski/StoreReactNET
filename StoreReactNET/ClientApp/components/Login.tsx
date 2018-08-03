@@ -11,21 +11,9 @@ export class Login extends React.Component
     {
         super(props);
 
-        if (this.props.data.user != null)
+        this.state =
         {
-            this.state =
-            {
-                user: this.props.data.user,
-                redirect: true
-            }
-        }
-        else
-        {
-            this.state =
-            {
-                user: this.props.data.user,
-                redirect: false
-            }
+            user: this.props.data.user,  
         }
     }
 
@@ -33,7 +21,7 @@ export class Login extends React.Component
     {
         if (nextProps.data.user != null)
         {
-            this.setState({ user: nextProps.data.user, redirect: true });
+            this.setState({ user: nextProps.data.user });
 
         } 
     }
@@ -73,6 +61,7 @@ export class Login extends React.Component
         }
         
     }
+
     renderFailedLogin()
     {
 
@@ -102,9 +91,10 @@ export class Login extends React.Component
         document.getElementById('react-app').appendChild(alertBackground);
         document.getElementById('react-app').appendChild(alertDiv);
     }
+
     render()
     {
-        if (this.state.redirect)
+        if (this.state.user != null)
         {
             return <Redirect to={'/'} />
         }
@@ -122,6 +112,7 @@ export class Login extends React.Component
                         <input type="password" id="passwordLogin" name="Password" className="form-control input-lg" placeholder="Password" />
                     </div>
                     <button type="submit" id="submitLogin" className="btn btn-warning btn-lg">Log in </button>
+
                 </div>
             </div>
 

@@ -1,6 +1,9 @@
 ﻿#navigationBar 
 {
     background: #222;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
 
 #navigationBar a 
@@ -21,10 +24,11 @@
     font-size: 15px;
     font-weight: bold;
 }
-#accountDropdown 
+#accountDropdown, #productsDropdown 
 {
     background: #444;
 }
+
 .navIcon 
 {
     vertical-align: top;

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StoreReactNET.Controllers
 {
-    [Route("api/Session/[action]")]
+    [Route("Session/[action]")]
     public class SessionController : Controller
     {
         [HttpGet]

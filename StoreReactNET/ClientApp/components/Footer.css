@@ -14,6 +14,10 @@
     margin-top: 10px;
     overflow: auto;
 }
+#footer-top .btn-warning 
+{
+    background: #FF9700;
+}
 
 #footer-bottom 
 {
@@ -49,15 +53,15 @@
 
 .footer-box a:hover 
 {
-    color: #04396C;
+    color: #efefef;
     text-decoration: none;
-    font-weight: bold;
 }
 
 .footer-box input[type="submit"] 
 {
     display: block;
     margin: 10px auto 0;
+    font-weight: bold;
 }
 @media (min-width: 767px) 
 {

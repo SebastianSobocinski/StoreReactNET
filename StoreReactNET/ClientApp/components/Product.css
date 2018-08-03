@@ -1,0 +1,90 @@
+﻿.productDiv
+{
+    position: relative;
+    overflow: auto;
+    padding: 10px 0 10px 15px;
+    border-bottom: 1px solid #efefef;  
+}
+.productHeader 
+{
+    display: block;
+    width: 100%;
+    font-weight: bold;
+    font-size: 19px;
+    cursor: pointer;
+    color: #FF9700;
+}
+
+.productHeader:hover 
+{
+    text-decoration: none;
+    color: #333;
+}
+.productImage 
+{
+    overflow: auto;
+    margin: 0;
+    padding: 10px 10px 0 0;
+}
+.productContent
+{
+    padding-top: 10px;
+}
+.productDescription 
+{
+    padding-left: 10px;
+}
+.productSides 
+{
+    padding: 10px 0 0 5px;
+    margin: 0;
+}
+.productPriceGross
+{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+    float: right;
+}
+.productPriceVAT
+{
+    float:right;
+}
+.productAdd
+{
+    float:right;
+    font-weight: bold;
+}
+
+
+@media (max-width: 992px) 
+{
+    .productImage
+    {
+        display: block;
+        float: none;
+        margin: 0 auto;
+        border: none;
+        margin-bottom: 20px;
+    }
+    .productContent
+    {
+        padding-top: 10px;
+        border-top: 1px solid #efefef;
+    }
+    .productSides 
+    {
+        padding-top: 10px;
+        border-top: 1px solid #efefef;
+    }
+    .productPriceGross
+    {
+        float: left;
+    }
+    .productPriceVAT
+    {
+        float: left;
+        margin-left: 10px;
+        line-height: 23px;
+    }
+}

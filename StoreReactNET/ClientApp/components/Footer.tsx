@@ -6,6 +6,18 @@ import "./Footer.css";
 
 export class Footer extends React.Component
 {
+    constructor(props)
+    {
+        super(props);
+        this.state =
+        {
+            user: this.props.data.user
+        }
+    }
+    componentWillReceiveProps(nextProps)
+    {
+        this.setState({ user: nextProps.data.user });
+    }
     componentDidMount()
     {
         let footer = document.getElementsByTagName('footer')[0];
@@ -26,18 +38,38 @@ export class Footer extends React.Component
             {
                 color: "white"
             }
+        let menuOptions;
+        if (this.state.user != null)
+        {
+            menuOptions =
+                (
+                <ol className="col-lg-12">
+                    <li><NavLink to={'/'}>Home</NavLink></li>
+                    <li><NavLink to={'/Account/Profile'}>My Profile</NavLink></li>
+                    <li><NavLink to={'/Account/Cart'}>Cart</NavLink></li>
+                    <li><NavLink to={'/Store'}>Products</NavLink></li> 
+                </ol>
+                )
+        }
+        else
+        {
+            menuOptions =
+                (
+                <ol className="col-lg-12">
+                    <li><NavLink to={'/'}>Home</NavLink></li>
+                    <li><NavLink to={'/Account/Login'}>Login</NavLink></li>
+                    <li><NavLink to={'/Account/Register'}>Register</NavLink></li>
+                    <li><NavLink to={'/Store'}>Products</NavLink></li>
+                </ol>
+                );
+        }
         return (
             <footer>
                 <div className="container">
                     <div id="footer-top">
                         <div className="col-md-3 col-sm-4 col-xs-12 footer-box">
-                            <p className="footer-header">Links</p>
-                            <ol className="col-lg-12">
-                                <li><NavLink to={'/Account/Login'}>Login</NavLink></li>
-                                <li><NavLink to={'/Account/Register'}>Register</NavLink></li>
-                                <li><NavLink to={'/Store'}>Products</NavLink></li>
-                                <li><NavLink to={'/'}>Home</NavLink></li>
-                            </ol>
+                            <p className="footer-header">Navigate</p>
+                            {menuOptions}
                         </div>
                         <div className="col-md-3 col-sm-4 col-xs-12 footer-box">
                             <p className="footer-header">Contact Us</p>

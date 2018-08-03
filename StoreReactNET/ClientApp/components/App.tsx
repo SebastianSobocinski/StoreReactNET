@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Login } from './Login';
+import ResizeObserver from 'resize-observer-polyfill';
 
 
 import { NavBar } from './NavBar';
@@ -12,9 +13,7 @@ import { User } from '../classess/User';
 import $ from 'jquery';
 import './App.css';
 
-export interface LayoutProps {
-    children?: React.ReactNode;
-}
+
 
 export class App extends React.Component
 {
@@ -37,7 +36,7 @@ export class App extends React.Component
             $.ajax(
                 {
                     type: "GET",
-                    url: "api/Session/GetUserSession",
+                    url: "Session/GetUserSession",
                     success: (respond) =>
                     {
                         if (respond.isEstablished)
@@ -49,11 +48,25 @@ export class App extends React.Component
                     }
                 });
         });
+
+        let navBar = document.getElementById('navigationBar');
+
+        new ResizeObserver(() =>
+        {
+            let navBarHeight = navBar.clientHeight;
+            document.getElementById('mainBody').style.marginTop = navBarHeight + 'px';
+
+        }).observe(navBar);
+
     }
 
     setUser(_user)
     {
         this.setState({ user: _user });
+    }
+    addProductToCart(_product)
+    {
+
     }
 
     public render()
@@ -68,14 +81,13 @@ export class App extends React.Component
             <NavBar data={mainProps} />
             <div id="mainBody" className="container">
                 <Switch>
-                    <Route exact path="/" render={() => <Home />} />
+                    <Route exact path="/" render={() => <Store />} />
                     <Route exact path='/Account/Login' render={() => <Login data={mainProps} />} />
                     <Route exact path="/Store" render={() => <Store />} />
-
-                    <Route path="/Store/:categoryID?/:productID?" render={(props) => <Store data={mainProps} {...props} />} />
+                    <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
                 </Switch>
             </div>
-            <Footer />
+            <Footer data={mainProps}/>
         </div>
 
     }

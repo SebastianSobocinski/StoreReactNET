@@ -12,8 +12,16 @@ export class NavBar extends React.Component
         super(props);
         this.state =
         {
-            user: this.props.data.user
+            user: this.props.data.user,
+            categories: []
         }
+        this.init();
+    }
+    async init()
+    {
+        let currentState = this.state;
+        currentState.categories = await this.getCategories();
+        this.setState(currentState);
     }
     componentWillReceiveProps(nextProps)
     {
@@ -30,7 +38,7 @@ export class NavBar extends React.Component
                 $.ajax(
                     {
                         type: "POST",
-                        url: "api/Session/ClearSession",
+                        url: "Session/ClearSession",
                         success: (respond) =>
                         {
                             if (respond.success)
@@ -43,6 +51,38 @@ export class NavBar extends React.Component
         }
     }
 
+    async getCategories()
+    {
+        let result = [];
+        await new Promise((resolve) =>
+        {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Product/GetAllCategories",
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            
+                            result = JSON.parse(respond.categories);
+                            
+                        }
+                        resolve();
+                    }
+                });
+
+        });
+        return result;
+    }
+
+    renderCategories()
+    {
+        return this.state.categories.map((obj) =>
+        {
+            return <li key={obj.Id}><NavLink to={'/Store/' +  obj.Id }>{obj.CategoryName}</NavLink></li>
+        });
+    }
     render()
     {
         let userNavbar;
@@ -68,9 +108,10 @@ export class NavBar extends React.Component
                             </ul>
                         </li>
                         <li>
-                            <NavLink to={'/Store'} activeClassName="active">
-                                Products
-                            </NavLink>
+                            <a data-toggle="dropdown"> Products </a>
+                            <ul className="dropdown-menu" id="productsDropdown">
+                                {this.renderCategories()}
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -88,9 +129,10 @@ export class NavBar extends React.Component
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to={'/Store'} activeClassName="active">
-                                Products
-                            </NavLink>
+                            <a data-toggle="dropdown"> Products </a>
+                            <ul className="dropdown-menu" id="productsDropdown">
+                                {this.renderCategories()}
+                            </ul>
                         </li>
                         <li>
                             <NavLink to={'/Account/Cart'} activeClassName="active">
