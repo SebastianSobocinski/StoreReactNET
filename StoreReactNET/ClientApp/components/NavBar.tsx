@@ -2,6 +2,7 @@
 import { Link, NavLink } from 'react-router-dom';
 import "./Navbar.css"
 import { User } from '../classess/User';
+import { AjaxQuery } from '../classess/AjaxQuery';
 
 import $ from 'jquery';
 
@@ -20,7 +21,7 @@ export class NavBar extends React.Component
     async init()
     {
         let currentState = this.state;
-        currentState.categories = await this.getCategories();
+        currentState.categories = await AjaxQuery.getAllCategories();
         this.setState(currentState);
     }
     componentWillReceiveProps(nextProps)
@@ -49,31 +50,6 @@ export class NavBar extends React.Component
                     });
             });
         }
-    }
-
-    async getCategories()
-    {
-        let result = [];
-        await new Promise((resolve) =>
-        {
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "Product/GetAllCategories",
-                    success: (respond) =>
-                    {
-                        if (respond.success)
-                        {
-                            
-                            result = JSON.parse(respond.categories);
-                            
-                        }
-                        resolve();
-                    }
-                });
-
-        });
-        return result;
     }
 
     renderCategories()

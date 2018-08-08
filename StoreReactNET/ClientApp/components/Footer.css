@@ -40,6 +40,10 @@
     font-weight: bold;
     text-align: center;
 }
+.footer-box 
+{
+    padding:0;
+}
 
 .footer-box ol 
 {

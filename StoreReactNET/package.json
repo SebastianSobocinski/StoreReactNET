@@ -33,6 +33,8 @@
   },
   "dependencies": {
     "css-element-queries": "^1.0.2",
+    "material-icons-react": "^1.0.2",
+    "react-multi-bar-slider": "^1.1.0",
     "react-resize-observer": "^1.0.3",
     "resize-observer-polyfill": "^1.5.0"
   }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoreReactNET.Models.Database
 {
@@ -18,7 +17,6 @@ namespace StoreReactNET.Models.Database
         public int? UserDetailsId { get; set; }
 
         public UserAdresses UserAdress { get; set; }
-        [ForeignKey("UserDetailsId")]
         public UserDetails UserDetails { get; set; }
         public ICollection<Carts> Carts { get; set; }
     }

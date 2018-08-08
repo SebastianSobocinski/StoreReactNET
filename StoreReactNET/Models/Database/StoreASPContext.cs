@@ -19,6 +19,7 @@ namespace StoreReactNET.Models.Database
         public virtual DbSet<Carts> Carts { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<ProductCategories> ProductCategories { get; set; }
+        public virtual DbSet<ProductDetails> ProductDetails { get; set; }
         public virtual DbSet<ProductImages> ProductImages { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<UserAdresses> UserAdresses { get; set; }
@@ -107,6 +108,27 @@ namespace StoreReactNET.Models.Database
                 entity.Property(e => e.CategoryName).IsRequired();
             });
 
+            modelBuilder.Entity<ProductDetails>(entity =>
+            {
+                entity.Property(e => e.Brand).HasMaxLength(50);
+
+                entity.Property(e => e.CoreBaseClockMhz).HasColumnName("CoreBaseClockMHZ");
+
+                entity.Property(e => e.CoreBoostClockMhz).HasColumnName("CoreBoostClockMHZ");
+
+                entity.Property(e => e.Model).HasMaxLength(50);
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.Vram).HasColumnName("VRAM");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductDetails_Products");
+            });
+
             modelBuilder.Entity<ProductImages>(entity =>
             {
                 entity.HasIndex(e => e.ProductId)
@@ -142,11 +164,18 @@ namespace StoreReactNET.Models.Database
 
                 entity.Property(e => e.ProductCategoryId).HasColumnName("ProductCategoryID");
 
+                entity.Property(e => e.ProductDetailsId).HasColumnName("ProductDetailsID");
+
                 entity.HasOne(d => d.ProductCategory)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.ProductCategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductProductsCategory");
+
+                entity.HasOne(d => d.ProductDetailsNavigation)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.ProductDetailsId)
+                    .HasConstraintName("FK_ProductsProductDetails");
             });
 
             modelBuilder.Entity<UserAdresses>(entity =>

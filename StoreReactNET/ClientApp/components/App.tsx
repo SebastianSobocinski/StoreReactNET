@@ -9,6 +9,7 @@ import { Footer } from './Footer';
 import { Home } from './Home';
 import { Store } from './Store';
 import { User } from '../classess/User';
+import { AjaxQuery } from '../classess/AjaxQuery';
 
 import $ from 'jquery';
 import './App.css';
@@ -31,26 +32,13 @@ export class App extends React.Component
 
     async componentDidMount()
     {
-        await new Promise((resolve) =>
+        let _user = await AjaxQuery.getUserSession();
+        if (_user != null)
         {
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "Session/GetUserSession",
-                    success: (respond) =>
-                    {
-                        if (respond.isEstablished)
-                        {
-                            let user = new User(respond.data)
-                            this.setUser(user);
-                        }
-                        resolve();
-                    }
-                });
-        });
+            this.setUser(_user);
+        }
 
         let navBar = document.getElementById('navigationBar');
-
         new ResizeObserver(() =>
         {
             let navBarHeight = navBar.clientHeight;
@@ -64,6 +52,7 @@ export class App extends React.Component
     {
         this.setState({ user: _user });
     }
+
     addProductToCart(_product)
     {
 
