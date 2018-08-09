@@ -84,52 +84,50 @@ export class Store extends React.Component
     {
         
         let currentState = this.state;
-
-        currentState.selectedFilters =
-            {
-                maxPrice: null,
-                brands: [],
-                models: [],
-                vramList: [],
-                busWidthList: []
-            }
+        currentState.selectedFilters = [];  
         let maxPriceValue = parseFloat(document.getElementById("sidePricePickerMax").value.replace(",", "."));
         if (!isNaN(maxPriceValue))
         {
-            currentState.selectedFilters.maxPrice = maxPriceValue;
+            let entry =
+                {
+                    type: "maxPrice",
+                    value: [maxPriceValue]
+                };
+            currentState.selectedFilters.push(entry);
         }
         
-        
+        let allFilters = currentState.productFilters;
+        allFilters.forEach((el) => currentState.selectedFilters.push({type: el.type, value: []}))
         let checkboxes = Array.from(document.getElementsByClassName('filterItemCheck'));
         checkboxes.forEach((el) =>
         {
             if (el.checked)
             {
+                let entry = el.value;
                 let type = el.dataset.filterType;
-                switch (type)
-                {
-                    case 'brands':
-                        currentState.selectedFilters.brands.push(el.value)
-                        break;
-                    case 'models':
-                        currentState.selectedFilters.models.push(el.value)
-                        break;
-                    case 'vramList':
-                        currentState.selectedFilters.vramList.push(el.value)
-                        break;
-                    case 'busWidthList':
-                        currentState.selectedFilters.busWidthList.push(el.value);
-                }
+                this.checkAndAdd(type, entry, currentState.selectedFilters);
             }
-           
         })
         document.getElementById("orderBySelect").value = "relevance";
-
         currentState.page = 1;
         currentState.productsList = await AjaxQuery.getProducts(currentState.categoryID, currentState.page, JSON.stringify(currentState.selectedFilters));
         this.setState(currentState);
         
     }
+    private checkAndAdd(type, entry, array)
+    {
+        
+        array.forEach((el) =>
+        {
+            if (el.type == type)
+            {
+                el.value.push(entry);
+                return;
+            }
+        })
+
+    }
+
     async sortProducts()
     {
         let currentState = this.state;
@@ -155,6 +153,7 @@ export class Store extends React.Component
         currentState.productsList = sortedProducts;
         this.setState(currentState);
     }
+
     renderProducts()
     {
 
@@ -174,38 +173,32 @@ export class Store extends React.Component
     renderFilters()
     {
         let filters = this.state.productFilters;
-        let toDraw = [];
-
-        for (let item in filters)
+        if (filters != null)
         {
-            if (filters[item].length > 1)
+            return filters.map((obj) =>
             {
-                for (let i = 0; i < filters[item].length; i++)
-                {
-                    if (i == 0)
-                    {
-                        let entry =
+                let View;
+                View =
+                    (
+                        <div key={obj.type} className="sideFilter col-xs-12 container">
+                            <a className="sideFilterHeader col-xs-12">{obj.displayName}</a>
                             {
-                                display: "header",
-                                type: item,
-                                value: filters[item][i];
-                            }
-                        toDraw.push(entry);
-                    }
-                    else
-                    {
-                        let entry =
-                            {
-                                display: "item",
-                                type: item,
-                                value: filters[item][i];
-                            }
-                        toDraw.push(entry);
-                    }
-                }
-            }
+                                obj.variables.map((el) =>
+                                {
+                                    return (<div key={el} className="filterItem col-xs-12"><input className="filterItemCheck form-check-input" type="checkbox" value={el} data-filter-type={obj.type} /><p className="filterItemText">{el}</p></div>)
+                                }
+                                )}
+                        </div>
+                    )
+                return View;
+            });
         }
-        return toDraw.map((obj) =>
+        
+
+       
+            
+        
+        /*return toDraw.map((obj) =>
         {
             let entry;
             if (obj.display == "header")
@@ -219,6 +212,7 @@ export class Store extends React.Component
 
 
         });
+        */
 
     }
 

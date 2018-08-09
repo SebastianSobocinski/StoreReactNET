@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -36,44 +37,45 @@ namespace StoreReactNET.Controllers
 
             if(result.Count > 0)
             {
-                if (Filters != "null")
+                var selectedFilters = JsonConvert.DeserializeObject<List<JSONProductFilter>>(Filters);
+                if(selectedFilters != null)
                 {
-                    var SelectedFilters = JsonConvert.DeserializeObject<ProductFilters>(Filters);
-                    if(SelectedFilters.MaxPrice != null)
+                    foreach (var filter in selectedFilters)
                     {
-                        result = result
-                                 .Where(c => (c.PriceVat * 1.23) <= SelectedFilters.MaxPrice)
-                                 .ToList();
-                    }
-                    if (SelectedFilters.Brands.Count > 0)
-                    {
-                        result = result
-                                 .Where(c => c.ProductDetailsId != null)
-                                 .Where(c => SelectedFilters.Brands.Contains(c.ProductDetailsNavigation.Brand))
-                                 .ToList();
-                    }
-                    if(SelectedFilters.Models.Count > 0)
-                    {
-                        result = result
-                                 .Where(c => c.ProductDetailsId != null)
-                                 .Where(c => SelectedFilters.Models.Contains(c.ProductDetailsNavigation.Model))
-                                 .ToList();
-                    }
-                    if(SelectedFilters.VramList.Count > 0)
-                    {
-                        result = result
-                                 .Where(c => c.ProductDetailsId != null)
-                                 .Where(c => SelectedFilters.VramList.Contains(c.ProductDetailsNavigation.Vram.ToString()))
-                                 .ToList();
-                    }
-                    if(SelectedFilters.BusWidthList.Count > 0)
-                    {
-                        result = result
-                                 .Where(c => c.ProductDetailsId != null)
-                                 .Where(c => SelectedFilters.BusWidthList.Contains(c.ProductDetailsNavigation.BusBandwith.ToString()))
-                                 .ToList();
+                        if(filter.Value.Count > 0)
+                        {
+                            if (filter.Type == "maxPrice")
+                            {
+                                try
+                                {
+                                    double maxPrice = double.Parse(filter.Value[0], CultureInfo.InvariantCulture);
+                                    result = result
+                                         .Where(c => (c.PriceVat * 1.23) <= maxPrice)
+                                         .ToList();
+                                }
+                                catch (Exception) { }
+
+                            }
+                            else
+                            {
+                                result = result
+                                         .Where(c => c.ProductDetailsId != null && c.ProductDetails.Count > 0)
+                                         .Where(c => (
+                                                      filter.Value.Contains
+                                                      (c.ProductDetailsNavigation
+                                                      .GetType()
+                                                      .GetProperty(filter.Type)
+                                                      .GetValue(c.ProductDetailsNavigation, null)
+                                                      ))   
+                                                )
+                                         .ToList();
+                            }
+                        }
+                        
                     }
                 }
+                
+               
                 result = result
                          .Take(Page * 10)
                          .Reverse()
@@ -102,65 +104,58 @@ namespace StoreReactNET.Controllers
         [HttpGet]
         public ActionResult GetAllFiltersFromCategory(int CategoryID)
         {
+            var respond = new
+            {
+                success = false,
+                filters = new List<JSONCategoryFilter>()
+            };
+
             var db = new StoreASPContext();
             var result = db.Products
                            .Include(c => c.ProductDetails)
                            .Where(c => c.ProductCategoryId == CategoryID)
                            .ToList<Products>();
-           
-            if (result.Count >= 0)
+
+            if(result.Count > 0)
             {
+                var filtersRequired = Singleton.FiltersRequired[CategoryID];
 
-
-                var brandsList = new List<string>();
-                brandsList.Add("Brands");
-                var modelsList = new List<string>();
-                modelsList.Add("Models");
-                var vramList = new List<string>();
-                vramList.Add("VRAM");
-                var busWidthList = new List<string>();
-                busWidthList.Add("Bus Bandwith");
+                var filtersHolder = new JSONCategoryFilters();
+                foreach (var required in filtersRequired)
+                {
+                    filtersHolder.Filters.Add(new JSONCategoryFilter(required));
+                }
 
                 foreach (var item in result)
                 {
-                    if (item.ProductDetailsNavigation != null)
+                    if (item.ProductDetailsId != null && item.ProductDetails.Count > 0)
                     {
-                        if (item.ProductDetailsNavigation.Brand != null)
+                        foreach (var required in filtersRequired)
                         {
-                            brandsList.Add(item.ProductDetailsNavigation.Brand);
-                        }
-                        if (item.ProductDetailsNavigation.Model != null)
-                        {
-                            modelsList.Add(item.ProductDetailsNavigation.Model);
-                        }
-                        if (item.ProductDetailsNavigation.Vram != null)
-                        {
-                            vramList.Add(item.ProductDetailsNavigation.Vram.ToString());
-                        }
-                        if (item.ProductDetailsNavigation.Vram != null)
-                        {
-                            busWidthList.Add(item.ProductDetailsNavigation.BusBandwith.ToString());
-                        }
+                            var filter = filtersHolder.GetFilter(required);
+                            string value = item.ProductDetailsNavigation
+                                    .GetType()
+                                    .GetProperty(required)
+                                    .GetValue(item.ProductDetailsNavigation, null)
+                                    .ToString();
 
+                            filter.Variables.Add(value);
+                        }
                     }
                 }
-                var filtersList = new
-                {
-                    brands = brandsList.Distinct().ToList(),
-                    models = modelsList.Distinct().ToList(),
-                    vramList = vramList.Distinct().ToList(),
-                    busWidthList = busWidthList.Distinct().ToList()
-                };
-                
-                //string filtersString = JsonConvert.SerializeObject(filters);
-                var respond = new
+                filtersHolder.DistinctFilters();
+                respond = new
                 {
                     success = true,
-                    filters = filtersList
+                    filters = filtersHolder.Filters
                 };
-                return Json(respond);
             }
-            return Json(null);
+            
+            
+           
+
+
+            return Json(respond);
         }
         
         [HttpGet]
