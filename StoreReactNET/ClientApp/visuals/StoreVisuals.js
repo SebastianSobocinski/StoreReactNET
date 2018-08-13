@@ -1,49 +1,38 @@
-﻿import $ from 'jquery';
+﻿let _categoriesOpen = false;
 
-let categoriesOpen = false;
-
-document.addEventListener("DOMContentLoaded", () =>
+export class StoreVisuals
 {
-    document.getElementById("sideCategoryTitle").addEventListener("click", () =>
+    static getCategoriesOpen()
     {
-        let categoryList = document.getElementById("sideCategoryList");
-        if (categoriesOpen)
+        return _categoriesOpen;
+    }
+    static setCategoriesOpen(value)
+    {
+        _categoriesOpen = value;
+    }
+
+    static animateCategories(from, step, to)
+    {
+        if (from < to)
         {
-            let startSize = categoryList.clientHeight;
-            requestAnimationFrame(() => animateCategories(startSize, startSize, 0))
-            categoriesOpen = false;
+            if (step < to)
+            {
+                step += 3
+                document.getElementById('sideCategoryList').style.height = step + "px";
+                requestAnimationFrame(() => this.animateCategories(from, step, to));
+            }
         }
         else
         {
-            let desiredSize = categoryList.scrollHeight;
-            categoriesOpen = true;
-            requestAnimationFrame(() => animateCategories(0, 0, desiredSize))
-        }
-    })
-   
-    
-})
+            if (step > to)
+            {
+                step -= 3
+                document.getElementById('sideCategoryList').style.height = step + "px";
+                requestAnimationFrame(() => this.animateCategories(from, step, to));
+            }
 
-function animateCategories(from, step, to)
-{
-    if (from < to)
-    {
-        if (step < to)
-        {
-            step += 3
-            document.getElementById('sideCategoryList').style.height = step + "px";
-            requestAnimationFrame(() => animateCategories(from, step, to));
         }
+
     }
-    else
-    {
-        if (step > to)
-        {
-            step -= 3
-            document.getElementById('sideCategoryList').style.height = step + "px";
-            requestAnimationFrame(() => animateCategories(from, step, to));
-        }
-       
-    }
-    
 }
+

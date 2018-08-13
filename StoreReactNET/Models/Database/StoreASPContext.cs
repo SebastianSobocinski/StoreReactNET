@@ -116,6 +116,10 @@ namespace StoreReactNET.Models.Database
 
                 entity.Property(e => e.CoreBoostClockMhz).HasColumnName("CoreBoostClockMHZ");
 
+                entity.Property(e => e.Line).HasMaxLength(50);
+
+                entity.Property(e => e.Litography).HasMaxLength(10);
+
                 entity.Property(e => e.Model).HasMaxLength(50);
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");

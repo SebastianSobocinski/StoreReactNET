@@ -9,7 +9,7 @@ namespace StoreReactNET.Models
     {
         private static Dictionary<int, List<string>> _filtersRequired;
         private static Dictionary<string, string> _filtersDisplayName;
-        private static Dictionary<string, string> _filtersJSONName;
+
 
         public static Dictionary<int, List<string>> FiltersRequired
         {
@@ -25,6 +25,14 @@ namespace StoreReactNET.Models
                         "Model",
                         "Vram",
                         "BusBandwith"
+                    });
+                    _filtersRequired.Add(2, new List<string>()
+                    {
+                        "Brand",
+                        "Model",
+                        "Line",
+                        "PhysicalCores",
+                        "Litography"
                     });
                     return _filtersRequired;
                 }
@@ -43,9 +51,12 @@ namespace StoreReactNET.Models
                     _filtersDisplayName = new Dictionary<string, string>()
                     {
                         { "Brand", "Brands" },
+                        { "Line", "Line" },
                         { "Model", "Models" },
                         { "Vram" , "VRAM Size" },
-                        { "BusBandwith", "Bus Bandwith" }
+                        { "BusBandwith", "Bus Bandwith" },
+                        { "PhysicalCores", "Physical Cores" },
+                        { "Litography", "Litography (nm)" }
                     };
                     return _filtersDisplayName;
                 }
@@ -55,28 +66,7 @@ namespace StoreReactNET.Models
                 }
             }
         }
-        public static Dictionary<string, string> FiltersJSONName
-        {
-            get
-            {
-                if(_filtersJSONName == null)
-                {
-                    _filtersJSONName = new Dictionary<string, string>()
-                    {
-                        { "Brand", "brands" },
-                        { "Model", "models" },
-                        { "Vram", "vramList" },
-                        { "BusBandwith", "busWithList" }
-                    };
-                    return _filtersJSONName;
-
-                }
-                else
-                {
-                    return _filtersJSONName;
-                }
-            }
-        }
+        
 
 
 

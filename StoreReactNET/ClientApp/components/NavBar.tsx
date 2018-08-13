@@ -52,11 +52,15 @@ export class NavBar extends React.Component
         }
     }
 
+    closeMenu()
+    {
+        $("#mainNav").collapse('hide');
+    }
     renderCategories()
     {
         return this.state.categories.map((obj) =>
         {
-            return <li key={obj.Id}><NavLink to={'/Store/' +  obj.Id }>{obj.CategoryName}</NavLink></li>
+            return <li key={obj.Id}><NavLink onClick={this.closeMenu} to={'/Store/' + obj.Id}>{obj.CategoryName}</NavLink></li>
         });
     }
     render()
@@ -66,18 +70,18 @@ export class NavBar extends React.Component
         {
             userNavbar = 
             (
-                <div className="navbar-collapse collapse">
+                <div id="mainNav" className="navbar-collapse collapse">
                     <ul id="navOptions" className="nav navbar-nav">
                         <li>
                             <a data-toggle="dropdown">Account</a>
                             <ul className="dropdown-menu" id="accountDropdown">
                                 <li>
-                                    <NavLink to={'/Account/Login'} activeClassName="active" >
+                                    <NavLink onClick={this.closeMenu} to={'/Account/Login'} activeClassName="active" >
                                         Log in
                                     </NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to={'/Account/Register'} activeClassName="active">
+                                    <NavLink onClick={this.closeMenu} to={'/Account/Register'} activeClassName="active">
                                         Register
                                     </NavLink>
                                 </li>
@@ -97,10 +101,10 @@ export class NavBar extends React.Component
         {
             userNavbar = 
             (
-                <div className="navbar-collapse collapse">
+                <div id="mainNav" className="navbar-collapse collapse">
                     <ul id="navOptions" className="nav navbar-nav">
                         <li>
-                            <NavLink to={'/Account/Profile'}>
+                            <NavLink onClick={this.closeMenu} to={'/Account/Profile'}>
                                 Welcome, {this.state.user.firstName}
                             </NavLink>
                         </li>
@@ -111,7 +115,7 @@ export class NavBar extends React.Component
                             </ul>
                         </li>
                         <li>
-                            <NavLink to={'/Account/Cart'} activeClassName="active">
+                            <NavLink onClick={this.closeMenu} to={'/Account/Cart'} activeClassName="active">
                                 <span id="shoppingCartIcon" className="navIcon glyphicon glyphicon-shopping-cart"><span id="shoppingCartCount">0</span></span><span id="cartValue">0,00 PLN</span>
                             </NavLink>
                         </li>
@@ -129,7 +133,7 @@ export class NavBar extends React.Component
         <div id="navigationBar" className="navbar navbar-inverse navbar-fixed-top">
             <div id="navContainer" className="container">
                 <div id="navHeader" className="navbar-header">
-                    <NavLink to={'/'} exact className="navbar-brand">
+                    <NavLink onClick={this.closeMenu} to={'/'} exact className="navbar-brand">
                             StoreReactNET
                     </NavLink>
 

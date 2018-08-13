@@ -45,7 +45,7 @@ export class AjaxQuery
                 });
         });
     }
-    static async getProducts(categoryID, page, filtersString)
+    static async getProducts(categoryID, page, filtersString, orderBy)
     {
         return new Promise((resolve) =>
         {
@@ -58,13 +58,18 @@ export class AjaxQuery
                     {
                         CategoryID: categoryID,
                         Page: page,
-                        Filters: filtersString
+                        Filters: filtersString,
+                        OrderBy: orderBy
                     },
                     success: (respond) =>
                     {
                         if (respond.success)
                         {
-                            result = JSON.parse(respond.products);
+                            result = respond.products || [];
+                        }
+                        else
+                        {
+                            result = [];
                         }
                         resolve(result);
                     }
@@ -94,5 +99,35 @@ export class AjaxQuery
                     }
                 });
         })
+    }
+    static async getAllSearchedProducts(query, page, orderBy)
+    {
+        return new Promise((resolve) =>
+        {
+            let result;
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Product/GetSearchedProducts",
+                    data:
+                    {
+                        Query: query,
+                        Page: page,
+                        OrderBy: orderBy
+                    },
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            result = respond.products || [];
+                        }
+                        else
+                        {
+                            result = [];
+                        }
+                        resolve(result);
+                    }
+                });
+        });
     }
 }

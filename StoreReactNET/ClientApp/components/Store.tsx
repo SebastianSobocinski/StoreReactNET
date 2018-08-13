@@ -1,17 +1,18 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Link, NavLink, Redirect } from 'react-router-dom';
-import MaterialIcon, { colorPalette } from 'material-icons-react';
+
 
 import { Product } from './Product';
 import { User } from '../classess/User';
 import { AjaxQuery } from '../classess/AjaxQuery';
 
 import './Store.css';
-import '../visuals/StoreVisuals.js';
+import { StoreVisuals } from '../visuals/StoreVisuals.js';
 
 import $ from 'jquery';
 import { NavBar } from './NavBar';
+import { SearchBar } from './SearchBar';
 
 export class Store extends React.Component
 {
@@ -26,7 +27,8 @@ export class Store extends React.Component
             allCategories: [],
             productsList: [],
             productFilters: [],
-            selectedFilters: null
+            selectedFilters: null,
+            orderBy: "relevance"
         }
         this.updateState(this.props);
     }
@@ -55,7 +57,7 @@ export class Store extends React.Component
             currentState.page = 1;
         }
 
-        currentState.productsList = await AjaxQuery.getProducts(currentState.categoryID, currentState.page, JSON.stringify(currentState.selectedFilters));
+        currentState.productsList = await AjaxQuery.getProducts(currentState.categoryID, currentState.page, JSON.stringify(currentState.selectedFilters), currentState.orderBy);
         currentState.allCategories = await AjaxQuery.getAllCategories();
         currentState.categoryName = await this.getSelectedCategoryName(currentState);
         currentState.productFilters = await AjaxQuery.getAllFiltersFromCategory(currentState.categoryID);
@@ -65,6 +67,25 @@ export class Store extends React.Component
     async componentWillReceiveProps(nextProps)
     {
         this.updateState(nextProps);
+    }
+    async componentDidMount()
+    {
+        document.getElementById("sideCategoryTitle").addEventListener("click", () =>
+        {
+            let categoryList = document.getElementById("sideCategoryList");
+            if (StoreVisuals.getCategoriesOpen())
+            {
+                let startSize = categoryList.clientHeight;
+                requestAnimationFrame(() => StoreVisuals.animateCategories(startSize, startSize, 0))
+                StoreVisuals.setCategoriesOpen(false);
+            }
+            else
+            {
+                let desiredSize = categoryList.scrollHeight;
+                StoreVisuals.setCategoriesOpen(true);
+                requestAnimationFrame(() => StoreVisuals.animateCategories(0, 0, desiredSize))
+            }
+        })
     }
 
     async getSelectedCategoryName(state)
@@ -97,20 +118,25 @@ export class Store extends React.Component
         }
         
         let allFilters = currentState.productFilters;
-        allFilters.forEach((el) => currentState.selectedFilters.push({type: el.type, value: []}))
-        let checkboxes = Array.from(document.getElementsByClassName('filterItemCheck'));
-        checkboxes.forEach((el) =>
+        if (allFilters != null)
         {
-            if (el.checked)
+            allFilters.forEach((el) => currentState.selectedFilters.push({ type: el.type, value: [] }))
+            let checkboxes = Array.from(document.getElementsByClassName('filterItemCheck'));
+            checkboxes.forEach((el) =>
             {
-                let entry = el.value;
-                let type = el.dataset.filterType;
-                this.checkAndAdd(type, entry, currentState.selectedFilters);
-            }
-        })
+                if (el.checked)
+                {
+                    let entry = el.value;
+                    let type = el.dataset.filterType;
+                    this.checkAndAdd(type, entry, currentState.selectedFilters);
+                }
+            })
+        }
+        
         document.getElementById("orderBySelect").value = "relevance";
         currentState.page = 1;
-        currentState.productsList = await AjaxQuery.getProducts(currentState.categoryID, currentState.page, JSON.stringify(currentState.selectedFilters));
+        currentState.orderBy = "relevance";
+        currentState.productsList = await AjaxQuery.getProducts(currentState.categoryID, currentState.page, JSON.stringify(currentState.selectedFilters), currentState.orderBy);
         this.setState(currentState);
         
     }
@@ -131,35 +157,40 @@ export class Store extends React.Component
     async sortProducts()
     {
         let currentState = this.state;
-        let initProducts = currentState.productsList;
-        let sortedProducts;
-
         let orderType = document.getElementById("orderBySelect").value;
-        switch (orderType)
-        {
-            case 'relevance':
-                sortedProducts = initProducts.sort((a, b) => { return b.ProductID - a.ProductID });
-                break;
-            case 'toLower':
-                sortedProducts = initProducts.sort((a, b) => { return b.ProductPrice - a.ProductPrice })
-                break;
-            case 'toHigher':
-                sortedProducts = initProducts.sort((a, b) => { return a.ProductPrice - b.ProductPrice })
-                break;
-            default:
-                sortedProducts = initProducts;
-                break;
-        }
-        currentState.productsList = sortedProducts;
+
+        currentState.orderBy = orderType;
+        currentState.productsList = await AjaxQuery.getProducts(currentState.categoryID, currentState.page, JSON.stringify(currentState.selectedFilters), orderType);
         this.setState(currentState);
+
     }
 
+    renderPages()
+    {
+        if (this.state.page > 1)
+        {
+            return (
+                <div id="productsPageList">
+                    <NavLink className="productsPageListItem" to={'/Store/' + this.state.categoryID + '/' + (this.state.page - 1)}>Previous</NavLink> / 
+                    <NavLink className="productsPageListItem" to={'/Store/' + this.state.categoryID + '/' + (parseInt(this.state.page) + 1)}>Next</NavLink>
+                </div>
+                )
+        }
+        else
+        {
+            return (
+                <div id="productsPageList">
+                    <NavLink className="productsPageListItem" to={'/Store/' + this.state.categoryID + '/' + (parseInt(this.state.page) + 1)}>Next</NavLink>
+                </div>
+                )
+        }
+    }
     renderProducts()
     {
 
         return this.state.productsList.map((obj) =>
         {
-            return <Product key={obj.ProductID} data={obj} />
+            return <Product key={obj.productID} data={obj} />
         });
         
     }
@@ -215,50 +246,54 @@ export class Store extends React.Component
         */
 
     }
-
+ 
     render()
     {
         let View = (
 
             <div id="storeContainer" className="container">
-                <div id="topBar" className="col-md-12">
-                    <div id="searchBar" className="col-md-5 col-xs-12">
-                        <form action="/Search/" method="GET">
-                            <button id="searchBarButton"><MaterialIcon icon="search" /></button>
-                            <input type="text" id="searchBarInput" className="form-control input-lg" name="query" placeholder="Search products..." />
-                        </form>
-                    </div>
-                    <div id="bottomBar" className="col-md-12 container">
+                <div id="topBar" className="col-xs-12 container">
+                    <SearchBar />
+                    <div id="bottomBar" className="col-xs-12 container">
                         <div id="categoryBar" className="col-sm-10 col-xs-12"><NavLink to={'/Store'}>Store</NavLink> > <NavLink to={'/Store/' + this.state.categoryID}> {this.state.categoryName} </NavLink></div>
                         <div id="orderBar" className="col-sm-2 col-xs-12">
                             <select onChange={this.sortProducts.bind(this)} id="orderBySelect" className="form-control">
                                 <optgroup label="Order by">
                                     <option value="relevance">Relevance</option>
                                     <option value="toLower">Price (higher - lower)</option>
-                                    <option value="toHigher">Price to (lower to higher)</option>
+                                    <option value="toHigher">Price (lower - higher)</option>
                                 </optgroup>
                             </select>
                         </div>
                     </div>
                 </div>
-                <aside className="col-md-3 container">
-                    <div id="sideCategoryTitle" className="col-md-12 container">
-                        <a id="sideCategoryTitleHeader" className="sideHeader"> Categories </a>
+                <aside className="col-md-3 col-xs-12 container">
+                    <div id="asideContainer">
+                        <div id="sideCategoryTitle" className="col-xs-12 container">
+                            <a id="sideCategoryTitleHeader" className="sideHeader"> Categories </a>
+                        </div>
+                        <ul id="sideCategoryList" className="col-xs-12 container">
+                            {this.renderCategories()}
+                        </ul>
+                        <div id="sidePricePicker" className="col-xs-12 container">
+                            <a className="sideHeader col-xs-12"> Max price </a>
+                            <input type="text" id="sidePricePickerMax" className="form-control input-sm" />
+                        </div>
+                        <div id="sideAllFilters" className="col-xs-12 container">
+                            {this.renderFilters()}
+                        </div>
+                        <button id="updateFiltersButton" className="btn btn-warning col-xs-8 col-xs-offset-2" onClick={this.setFilters.bind(this)}> Filter </button>
+                        
                     </div>
-                    <ul id="sideCategoryList" className="col-md-12 container">
-                        {this.renderCategories()}
-                    </ul>
-                    <div id="sidePricePicker" className="col-md-12 container">
-                        <a className="sideHeader col-xs-12"> Max price </a>
-                        <input type="text" id="sidePricePickerMax" className="form-control input-sm" />
-                    </div>
-                    <div id="sideAllFilters" className="col-md-12 container">
-                        {this.renderFilters()}
-                    </div>
-                    <button id="updateFiltersButton" className="btn btn-warning col-xs-8 col-xs-offset-2" onClick={this.setFilters.bind(this)}> Filter </button>
+                    <button id="openFiltersButton" className="btn btn-warning col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2"> Filters </button>
                 </aside>
-                <div id="productsContainer" className="col-md-9">
-                    {this.renderProducts()}
+                <div id="productsContainer" className="col-md-9 col-xs-12 container">
+                    <div id="productsPage" className="col-xs-12 container">
+                        {this.renderPages()}
+                    </div>
+                    <div id="productsList" className="col-xs-12 container">
+                        {this.renderProducts()}
+                    </div>
                 </div>
 
             </div>

@@ -19,12 +19,12 @@ namespace StoreReactNET.Controllers
     public class ProductController : Controller
     {
         [HttpGet]
-        public ActionResult GetProducts(int CategoryID, int Page, string Filters)
+        public ActionResult GetProducts(int CategoryID, int Page, string Filters, string OrderBy)
         {
             var respond = new
             {
                 success = false,
-                products = ""
+                products = new List<ProductViewModel>()
             };
             var db = new StoreASPContext();
 
@@ -66,6 +66,7 @@ namespace StoreReactNET.Controllers
                                                       .GetType()
                                                       .GetProperty(filter.Type)
                                                       .GetValue(c.ProductDetailsNavigation, null)
+                                                      .ToString()
                                                       ))   
                                                 )
                                          .ToList();
@@ -74,31 +75,158 @@ namespace StoreReactNET.Controllers
                         
                     }
                 }
-                
-               
+
+                switch (OrderBy)
+                {
+                    case "relevance":
+                        result = result.OrderBy(c => c.Id).ToList();
+                        break;
+                    case "toLower":
+                        result = result.OrderByDescending(c => c.PriceVat).ToList();
+                        break;
+                    case "toHigher":
+                        result = result.OrderBy(c => c.PriceVat).ToList();
+                        break;
+                    default:
+                        break; 
+                }
+
                 result = result
                          .Take(Page * 10)
-                         .Reverse()
                          .ToList();
-
-                result = result
-                         .Take(10)
-                         .ToList();
-
-                var ProductsList = new List<ProductViewModel>();
-                foreach (var item in result)
+               
+                
+                var ItemsByPage = new List<ProductViewModel>();
+                for(int i = (Page - 1) * 10; i < (Page * 10); i++)
                 {
-                    ProductsList.Add(new ProductViewModel(item));
+                    try
+                    {
+                        ItemsByPage.Add(new ProductViewModel(result[i]));
+                    }
+                    catch(Exception) { }
                 }
-                string ProductsListString = JsonConvert.SerializeObject(ProductsList);
-
                 respond = new
                 {
                     success = true,
-                    products = ProductsListString
+                    products = ItemsByPage
                 };
             }
             
+            return Json(respond);
+        }
+        [HttpGet]
+        public ActionResult GetSearchedProducts(string Query, int Page, string OrderBy)
+        {
+            var respond = new
+            {
+                success = false,
+                products = new List<ProductViewModel>()
+            };
+            if (Query != null)
+            {
+                var QueryArray = JsonConvert.DeserializeObject<List<string>>(Query);
+                
+                if(QueryArray.Count > 0)
+                {
+                    QueryArray = QueryArray.Select(c => c.ToLowerInvariant()).ToList();
+                    var db = new StoreASPContext();
+                    var result = db.Products
+                                   .Include(c => c.ProductCategory)
+                                   .Include(c => c.ProductImages)
+                                   .Include(c => c.ProductDetails)
+                                   .Where(c =>
+                                        QueryArray.Any(el => c.Name.Replace(" ", "")
+                                                                   .ToLowerInvariant()
+                                                                   .Contains(el)
+                                                                   )
+                                        ||
+                                        QueryArray.Any(el => c.ProductCategory
+                                                                  .CategoryName
+                                                                  .Replace(" ", "")
+                                                                  .ToLowerInvariant()
+                                                                  .Contains(el)
+                                                                  )
+                                        )
+                                   .ToList();
+
+                    if (result.Count > 0)
+                    {
+                        switch (OrderBy)
+                        {
+                            case "relevance":
+                                result.Sort(delegate (Products p1, Products p2)
+                                {
+                                    int p1Completed = 0;
+                                    int p2Completed = 0;
+                                    foreach (var condition in QueryArray)
+                                    {
+                                        if (p1.Name.Replace(" ", "").ToLowerInvariant().Contains(condition))
+                                        {
+                                            p1Completed++;
+                                        }
+                                        if (p1.ProductCategory.CategoryName.Replace(" ", "").ToLowerInvariant().Contains(condition))
+                                        {
+                                            p1Completed++;
+                                        }
+                                        if (p2.Name.Replace(" ", "").ToLowerInvariant().Contains(condition))
+                                        {
+                                            p2Completed++;
+                                        }
+                                        if (p2.ProductCategory.CategoryName.Replace(" ", "").ToLowerInvariant().Contains(condition))
+                                        {
+                                            p2Completed++;
+                                        }
+
+                                    }
+                                    if (p1Completed > p2Completed)
+                                    {
+                                        return -1;
+                                    }
+                                    else if (p2Completed > p1Completed)
+                                    {
+                                        return 1;
+                                    }
+                                    else
+                                    {
+                                        return p1.Id.CompareTo(p2.Id);
+                                    }
+                                });
+                                break;
+                            case "toLower":
+                                result = result.OrderByDescending(c => c.PriceVat).ToList();
+                                break;
+                            case "toHigher":
+                                result = result.OrderBy(c => c.PriceVat).ToList();
+                                break;
+                            default:
+                                break;
+                        }
+
+
+
+                        var ItemsByPage = new List<ProductViewModel>();
+                        for (int i = (Page - 1) * 10; i < (Page * 10); i++)
+                        {
+                            try
+                            {
+                                ItemsByPage.Add(new ProductViewModel(result[i]));
+                            }
+                            catch (Exception) { }
+                        }
+                        respond = new
+                        {
+                            success = true,
+                            products = ItemsByPage
+                        };
+                    }
+
+                }
+
+
+
+            }
+
+
             return Json(respond);
         }
         [HttpGet]
@@ -118,46 +246,53 @@ namespace StoreReactNET.Controllers
 
             if(result.Count > 0)
             {
-                var filtersRequired = Singleton.FiltersRequired[CategoryID];
-
-                var filtersHolder = new JSONCategoryFilters();
-                foreach (var required in filtersRequired)
+                try
                 {
-                    filtersHolder.Filters.Add(new JSONCategoryFilter(required));
-                }
+                    var filtersRequired = Singleton.FiltersRequired[CategoryID];
 
-                foreach (var item in result)
-                {
-                    if (item.ProductDetailsId != null && item.ProductDetails.Count > 0)
+                    var filtersHolder = new JSONCategoryFilters();
+                    foreach (var required in filtersRequired)
                     {
-                        foreach (var required in filtersRequired)
-                        {
-                            var filter = filtersHolder.GetFilter(required);
-                            string value = item.ProductDetailsNavigation
-                                    .GetType()
-                                    .GetProperty(required)
-                                    .GetValue(item.ProductDetailsNavigation, null)
-                                    .ToString();
+                        filtersHolder.Filters.Add(new JSONCategoryFilter(required));
+                    }
 
-                            filter.Variables.Add(value);
+                    foreach (var item in result)
+                    {
+                        if (item.ProductDetailsId != null && item.ProductDetails.Count > 0)
+                        {
+                            foreach (var required in filtersRequired)
+                            {
+                                var filter = filtersHolder.GetFilter(required);
+                                string value = null;
+                                try
+                                {
+                                    value = item.ProductDetailsNavigation
+                                        .GetType()
+                                        .GetProperty(required)
+                                        .GetValue(item.ProductDetailsNavigation, null)
+                                        .ToString();
+                                }
+                                catch (Exception) { }
+
+                                if (value != null)
+                                {
+                                    filter.Variables.Add(value);
+                                }
+                                
+                            }
                         }
                     }
+                    filtersHolder.DistinctFilters();
+                    respond = new
+                    {
+                        success = true,
+                        filters = filtersHolder.Filters
+                    };
                 }
-                filtersHolder.DistinctFilters();
-                respond = new
-                {
-                    success = true,
-                    filters = filtersHolder.Filters
-                };
+                catch (Exception) { }  
             }
-            
-            
-           
-
-
             return Json(respond);
         }
-        
         [HttpGet]
         public ActionResult GetAllCategories()
         {

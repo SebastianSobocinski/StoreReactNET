@@ -33,6 +33,8 @@
     <None Remove="ClientApp\components\Login.tsx" />
     <None Remove="ClientApp\components\NavBar.tsx" />
     <None Remove="ClientApp\components\Product.tsx" />
+    <None Remove="ClientApp\components\Search.tsx" />
+    <None Remove="ClientApp\components\SearchBar.tsx" />
     <None Remove="ClientApp\components\Store.tsx" />
   </ItemGroup>
 
@@ -58,6 +60,8 @@
     <TypeScriptCompile Include="ClientApp\components\Login.tsx" />
     <TypeScriptCompile Include="ClientApp\components\NavBar.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Product.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\Search.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\SearchBar.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Store.tsx" />
   </ItemGroup>
 

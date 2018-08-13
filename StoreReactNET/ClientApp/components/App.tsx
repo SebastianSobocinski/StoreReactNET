@@ -8,6 +8,7 @@ import { NavBar } from './NavBar';
 import { Footer } from './Footer';
 import { Home } from './Home';
 import { Store } from './Store';
+import { Search } from './Search';
 import { User } from '../classess/User';
 import { AjaxQuery } from '../classess/AjaxQuery';
 
@@ -74,6 +75,7 @@ export class App extends React.Component
                     <Route exact path='/Account/Login' render={() => <Login data={mainProps} />} />
                     <Route exact path="/Store" render={() => <Store />} />
                     <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
+                    <Route path="/Search" render={(props) => <Search {...props}/>} />
                 </Switch>
             </div>
             <Footer data={mainProps}/>
