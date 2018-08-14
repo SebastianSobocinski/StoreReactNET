@@ -32,6 +32,7 @@ export class Store extends React.Component
         }
         this.updateState(this.props);
     }
+
     async updateState(nextProps)
     {
         let currentState = this.state;
@@ -190,7 +191,7 @@ export class Store extends React.Component
 
         return this.state.productsList.map((obj) =>
         {
-            return <Product key={obj.productID} data={obj} />
+            return <Product key={obj.productID} data={obj} addToCart={this.props.data.addToCart}/>
         });
         
     }

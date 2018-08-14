@@ -14,6 +14,7 @@ export class NavBar extends React.Component
         this.state =
         {
             user: this.props.data.user,
+            cart: this.props.data.cart
             categories: []
         }
         this.init();
@@ -26,8 +27,12 @@ export class NavBar extends React.Component
     }
     componentWillReceiveProps(nextProps)
     {
-        this.setState({ user: nextProps.data.user })
+        let currentState = this.state;
+        currentState.user = nextProps.data.user;
+        currentState.cart = nextProps.data.cart;
+        this.setState(currentState)
     }
+
 
     componentDidUpdate()
     {
@@ -55,6 +60,26 @@ export class NavBar extends React.Component
     closeMenu()
     {
         $("#mainNav").collapse('hide');
+    }
+
+    calculateCartValue()
+    {
+        let price = 0;
+        this.state.cart.forEach((el) =>
+        {
+            price += el.productPrice * el.quantity;
+        })
+        price = price * 1.23;
+        return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + " PLN";
+    }
+    calculateCartQuantity()
+    {
+        let quantity = 0;
+        this.state.cart.forEach((el) =>
+        {
+            quantity += parseInt(el.quantity)
+        })
+        return quantity;
     }
     renderCategories()
     {
@@ -116,7 +141,14 @@ export class NavBar extends React.Component
                         </li>
                         <li>
                             <NavLink onClick={this.closeMenu} to={'/Account/Cart'} activeClassName="active">
-                                <span id="shoppingCartIcon" className="navIcon glyphicon glyphicon-shopping-cart"><span id="shoppingCartCount">0</span></span><span id="cartValue">0,00 PLN</span>
+                                <span id="shoppingCartIcon" className="navIcon glyphicon glyphicon-shopping-cart">
+                                    <span id="shoppingCartCount">
+                                        {this.calculateCartQuantity()}
+                                    </span>
+                                </span>
+                                <span id="cartValue">
+                                    {this.calculateCartValue()}
+                                </span>
                             </NavLink>
                         </li>
                         <li>

@@ -1,0 +1,15 @@
+﻿#cartContainer
+{
+    margin-top:25px;
+    padding:0;
+}
+#cartItemsList
+{
+    padding:0;
+}
+#cartApply
+{
+    font-weight: bold;
+    margin-top: 10px;
+    float:right;
+}

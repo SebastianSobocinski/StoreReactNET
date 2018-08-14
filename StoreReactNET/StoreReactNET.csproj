@@ -29,6 +29,8 @@
   <ItemGroup>
     <None Remove="ClientApp\classess\User.js" />
     <None Remove="ClientApp\components\App.tsx" />
+    <None Remove="ClientApp\components\Cart.tsx" />
+    <None Remove="ClientApp\components\CartItem.tsx" />
     <None Remove="ClientApp\components\Footer.tsx" />
     <None Remove="ClientApp\components\Login.tsx" />
     <None Remove="ClientApp\components\NavBar.tsx" />
@@ -55,6 +57,8 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\classess\User.js" />
+    <TypeScriptCompile Include="ClientApp\components\Cart.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\CartItem.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Footer.tsx" />
     <TypeScriptCompile Include="ClientApp\components\App.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Login.tsx" />

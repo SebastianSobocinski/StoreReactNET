@@ -89,7 +89,7 @@ export class Product extends React.Component
                 <div className="col-md-2 col-xs-12 container productSides">
                     <p className="productPriceGross col-xs-12"> {prices.Gross + ' PLN'} </p>
                     <p className="productPriceVAT col-xs-12"> {prices.VAT + ' VAT'} </p>
-                    <button onClick={()=> this.test()} className="productAdd btn btn-warning">Add to cart</button>
+                    <button onClick={()=> this.props.addToCart(this.state)} className="productAdd btn btn-warning">Add to cart</button>
                 </div>
             </div>
             )

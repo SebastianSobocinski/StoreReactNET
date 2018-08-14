@@ -69,7 +69,7 @@ export class Search extends React.Component
     {
         return this.state.productsList.map((obj) =>
         {
-            return <Product key={obj.productID} data={obj} />
+            return <Product key={obj.productID} addToCart={this.props.data.addToCart} data={obj} />
         });
     }
 

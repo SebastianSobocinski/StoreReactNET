@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Login } from './Login';
 import ResizeObserver from 'resize-observer-polyfill';
 
 
 import { NavBar } from './NavBar';
 import { Footer } from './Footer';
-import { Home } from './Home';
+import { Login } from './Login';
+import { Cart } from './Cart';
 import { Store } from './Store';
 import { Search } from './Search';
 import { User } from '../classess/User';
@@ -24,20 +24,21 @@ export class App extends React.Component
         super(props);
         this.state =
         {
-            user: null
+            user: null,
+            cart: []
         }
 
         this.setUser = this.setUser.bind(this);
-
+        this.addToCart = this.addToCart.bind(this);
+        this.reCalculate = this.reCalculate.bind(this);
     }
 
     async componentDidMount()
     {
-        let _user = await AjaxQuery.getUserSession();
-        if (_user != null)
-        {
-            this.setUser(_user);
-        }
+        let currentState = this.state;
+        currentState.user = await AjaxQuery.getUserSession();
+        currentState.cart = await AjaxQuery.getCartSession();
+        this.setState(currentState);
 
         let navBar = document.getElementById('navigationBar');
         new ResizeObserver(() =>
@@ -49,33 +50,48 @@ export class App extends React.Component
 
     }
 
-    setUser(_user)
+    async setUser(_user)
     {
-        this.setState({ user: _user });
+        let currentState = this.state;
+        currentState.user = _user;
+        this.setState(currentState);
     }
-
-    addProductToCart(_product)
+    async addToCart(_product)
     {
-
+        let currentState = this.state;
+        currentState.cart = await AjaxQuery.addToCartSession(_product.productID);
+        this.setState(currentState);
     }
-
-    public render()
+    async reCalculate()
+    {
+        let currentState = this.state;
+        currentState.cart = await AjaxQuery.updateCartSession(this.state.cart);
+        this.setState(currentState);
+    }
+    render()
     {
         let mainProps =
         {
             user: this.state.user,
-            setUser: this.setUser
+            cart: this.state.cart,
+            setUser: this.setUser,
+            addToCart: this.addToCart
+        }
+        let cartProps =
+        {
+            reCalculate: this.reCalculate
         }
 
         return <div className='container-fluid'>
             <NavBar data={mainProps} />
             <div id="mainBody" className="container">
                 <Switch>
-                    <Route exact path="/" render={() => <Store />} />
-                    <Route exact path='/Account/Login' render={() => <Login data={mainProps} />} />
-                    <Route exact path="/Store" render={() => <Store />} />
+                    <Route exact path="/" render={() => <Store data={mainProps} />} />
+                    <Route exact path="/Account/Login" render={() => <Login data={mainProps} />} />
+                    <Route exact path="/Account/Cart" render={() => <Cart data={mainProps} cart={cartProps}/>} />
+                    <Route exact path="/Store" render={() => <Store data={mainProps}/>} />
                     <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
-                    <Route path="/Search" render={(props) => <Search {...props}/>} />
+                    <Route path="/Search" render={(props) => <Search data={mainProps} {...props}/>} />
                 </Switch>
             </div>
             <Footer data={mainProps}/>

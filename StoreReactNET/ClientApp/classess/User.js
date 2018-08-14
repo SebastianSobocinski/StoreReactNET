@@ -4,9 +4,9 @@
     {
         let respond = JSON.parse(respondString);
 
-        this.userID = respond.ID;
-        this.email = respond.Email;
-        this.firstName = respond.FirstName;
-        this.lastName = respond.LastName;
+        this.userID = respond.id;
+        this.email = respond.email;
+        this.firstName = respond.firstName;
+        this.lastName = respond.lastName;
     }
 }

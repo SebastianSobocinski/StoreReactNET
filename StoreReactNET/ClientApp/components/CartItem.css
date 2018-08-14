@@ -1,0 +1,32 @@
+﻿.cartItem
+{
+    border-bottom:1px solid #efefef;
+    padding: 10px 0;
+}
+.cartItemTitle
+{
+    font-weight: bold;
+    text-align: center;
+}
+.cartItemQuantityInput
+{
+    max-width: 75px;
+    margin: 0 auto;
+}
+.cartItemPrice
+{
+    text-align: center;
+    font-weight:bold;
+    padding:0;
+}
+@media (max-width: 992px) 
+{
+    .cartItemTitle
+    {
+        margin-top: 15px;
+    }
+    .cartItemPrice
+    {
+        margin-top:10px;
+    }
+}

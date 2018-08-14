@@ -140,6 +140,7 @@
 #openFiltersButton
 {
     display: none;
+    margin-bottom: 20px;
 }
 #productsContainer 
 {
@@ -192,6 +193,12 @@
     #openFiltersButton
     {
         display: block;
+    }
+    #productsPage 
+    {
+        padding: 5px 5px;
+        border-top: 1px solid #efefef;
+        border-bottom: 1px solid #efefef;
     }
 
 }

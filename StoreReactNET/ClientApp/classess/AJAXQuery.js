@@ -22,6 +22,78 @@ export class AjaxQuery
                     }
                 });
         });
+    
+    }
+    static async getCartSession()
+    {
+        return new Promise((resolve) =>
+        {
+            let result;
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Session/GetCartSession",
+                    success: (respond) =>
+                    {
+                        if (respond.isEstablished)
+                        {
+                            result = JSON.parse(respond.cart);
+                        }
+                        resolve(result);
+                    }
+                });
+        });
+    }
+    static async addToCartSession(productID)
+    {
+        return new Promise((resolve) =>
+        {
+            let result;
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "Session/AddToCartSession",
+                    data:
+                    {
+                        ProductID: productID
+                    },
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            result = JSON.parse(respond.cart)
+                        }
+                        alert(respond.message)
+
+                        resolve(result);
+                    }
+                });
+        });
+    }
+    static async updateCartSession(cartArray)
+    {
+        return new Promise((resolve) =>
+        {
+            let result;
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "Session/UpdateCartSession",
+                    data:
+                    {
+                        Cart: JSON.stringify(cartArray)
+                    },
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            result = respond.cart;
+                        }
+                        alert(respond.message);
+                        resolve(result);
+                    }
+                });
+        });
     }
     static async getAllCategories()
     {

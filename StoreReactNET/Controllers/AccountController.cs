@@ -32,7 +32,11 @@ namespace StoreReactNET.Controllers
             {
                 var userVM = new UserViewModel(result);
                 var userString = JsonConvert.SerializeObject(userVM);
+                var cartVM = new List<CartItemViewModel>();
+                var cartString = JsonConvert.SerializeObject(cartVM);
+
                 HttpContext.Session.SetString("user", userString);
+                HttpContext.Session.SetString("cart", cartString);
                 respond = new
                 {
                     success = true

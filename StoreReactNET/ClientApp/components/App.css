@@ -1,4 +1,11 @@
-﻿#mainBody 
+﻿
+#react-app 
+{
+    min-height: 100vh;
+    position: relative;
+    overflow: auto;
+}
+#mainBody 
 {
     margin-top: 75px;
     margin-bottom: 25px;
