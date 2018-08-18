@@ -1,5 +1,4 @@
 ﻿import $ from 'jquery';
-import { User } from './User';
 
 export class AjaxQuery
 {
@@ -16,7 +15,7 @@ export class AjaxQuery
                     {
                         if (respond.isEstablished)
                         {
-                            result = new User(respond.data)
+                            result = JSON.parse(respond.user)
                         }
                         resolve(result);
                     }
@@ -142,6 +141,34 @@ export class AjaxQuery
                         else
                         {
                             result = [];
+                        }
+                        resolve(result);
+                    }
+                });
+        })
+    }
+    static async getClickedProduct(productID)
+    {
+        return new Promise((resolve) =>
+        {
+            let result = null;
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Product/GetClickedProduct",
+                    data:
+                    {
+                        ProductID: productID,
+                    },
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            result = respond.product || null;
+                        }
+                        else
+                        {
+                            result = null;
                         }
                         resolve(result);
                     }

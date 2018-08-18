@@ -130,7 +130,7 @@ export class NavBar extends React.Component
                     <ul id="navOptions" className="nav navbar-nav">
                         <li>
                             <NavLink onClick={this.closeMenu} to={'/Account/Profile'}>
-                                Welcome, {this.state.user.firstName}
+                                My Profile
                             </NavLink>
                         </li>
                         <li>

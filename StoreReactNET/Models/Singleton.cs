@@ -9,7 +9,7 @@ namespace StoreReactNET.Models
     {
         private static Dictionary<int, List<string>> _filtersRequired;
         private static Dictionary<string, string> _filtersDisplayName;
-
+        private static Dictionary<string, string> _filtersClickedProductName;
 
         public static Dictionary<int, List<string>> FiltersRequired
         {
@@ -66,7 +66,34 @@ namespace StoreReactNET.Models
                 }
             }
         }
-        
+        public static Dictionary<string, string> FiltersClickedProductName
+        {
+            get
+            {
+                if (_filtersClickedProductName == null)
+                {
+                    _filtersClickedProductName = new Dictionary<string, string>()
+                    {
+                        { "Brand", "Brand" },
+                        { "Line", "Line" },
+                        { "Model", "Model" },
+                        { "Vram" , "VRAM Size" },
+                        { "BusBandwith", "Bus Bandwith" },
+                        { "CoreBaseClockMhz", "Core Base (MHz)" },
+                        { "CoreBoostClockMhz", "Core Boost (MHZ)" },
+                        { "PhysicalCores", "Physical Cores" },
+                        { "Threads", "Threads" },
+                        { "Litography", "Litography (nm)" }
+                    };
+                    return _filtersClickedProductName;
+                }
+                else
+                {
+                    return _filtersClickedProductName;
+                }
+            }
+        }
+
 
 
 

@@ -7,9 +7,32 @@
 {
     padding:0;
 }
+#cartBottom
+{
+    padding:0;
+}
+#cartTotalValue
+{
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom:1px solid #efefef;
+}
+#cartTotalValueLabel
+{
+
+    text-decoration: none;
+}
 #cartApply
 {
     font-weight: bold;
     margin-top: 10px;
-    float:right;
+
+}
+#cartSubmitOrder
+{
+    margin-top: 10px;
+    margin-left: 10px;
+    font-weight: bold;
+
 }

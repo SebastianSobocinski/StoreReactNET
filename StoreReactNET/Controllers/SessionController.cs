@@ -20,7 +20,7 @@ namespace StoreReactNET.Controllers
             var respond = new
             {
                 isEstablished = false,
-                data = ""
+                user = ""
             };
             var session = HttpContext.Session.GetString("user");
 
@@ -29,7 +29,7 @@ namespace StoreReactNET.Controllers
                 respond = new
                 {
                     isEstablished = true,
-                    data = session
+                    user = session
                 };
             }
 

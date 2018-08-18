@@ -1,6 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Redirect } from 'react-router-dom';
+import { Popup } from './Popup';
 
 import $ from 'jquery';
 import './Login.css'
@@ -10,86 +11,31 @@ export class Login extends React.Component
     constructor(props)
     {
         super(props);
+        const queryString = require('query-string');
+        let parsed = queryString.parse(this.props.location.search);
 
         this.state =
         {
-            user: this.props.data.user,  
+            user: this.props.data.user || null,  
+            failed: Boolean(parsed.failed) || false
         }
+
     }
 
     componentWillReceiveProps(nextProps)
     {
+        let currentState = this.state;
         if (nextProps.data.user != null)
         {
-            this.setState({ user: nextProps.data.user });
-
-        } 
-    }
-
-    componentDidMount()
-    {
-        let button = document.getElementById('submitLogin');
-        if (button != null)
-        {
-            button.addEventListener('click', () =>
-            {
-                let userEmail = document.getElementById('emailLogin').value;
-                let userPassword = document.getElementById('passwordLogin').value;
-                $.ajax(
-                    {
-                        type: "POST",
-                        url: "/Account/Login",
-                        data:
-                        {
-                            Email: userEmail,
-                            Password: userPassword
-                        },
-                        success: (respond) =>
-                        {
-                            if (respond.success)
-                            {
-                                window.location.href = "/";
-                            }
-                            else
-                            {
-                                this.renderFailedLogin();
-                            }
-
-                        }
-                    });
-            });
+            currentState.user = nextProps.data.user;
         }
-        
-    }
-
-    renderFailedLogin()
-    {
-
-        let alertBackground = document.createElement('div');
-        alertBackground.id = "loginAlertBackground";
-
-        let alertDiv = document.createElement('div');
-        alertDiv.id = "loginAlertDiv";
-
-        let message = document.createElement('p');
-        message.id = "loginAlertMessage";
-        message.innerHTML = "Wrong email or password! Please try again.";
-
-        let alertButton = document.createElement('button');
-        alertButton.id = "loginAlertButton";
-        alertButton.className = "btn btn-danger btn-lg";
-        alertButton.innerHTML = "OK";
-        alertButton.addEventListener('click', () =>
+        else
         {
-            alertBackground.remove();
-            alertDiv.remove();
-        });
-
-        alertDiv.appendChild(message);
-        alertDiv.appendChild(alertButton);
-
-        document.getElementById('react-app').appendChild(alertBackground);
-        document.getElementById('react-app').appendChild(alertDiv);
+            const queryString = require('query-string');
+            let parsed = queryString.parse(nextProps.location.search);
+            currentState.failed = Boolean(parsed.failed) || false
+        }
+        this.setState(currentState);
     }
 
     render()
@@ -98,24 +44,34 @@ export class Login extends React.Component
         {
             return <Redirect to={'/'} />
         }
-        return (
+        else
+        {
+            let popup = null
+            if (this.state.failed)
+            {
+                popup = <Popup title="Wrong email or password." />
+            }
+            return (
 
-            <div id="loginContainer" className="col-lg-8">
+                <div id="loginContainer" className="col-lg-8">
 
-                <h2>Please sign in</h2>
-                <div id="loginForm" name="loginForm">
-
-                    <div className="col-lg-12">
-                        <input type="email" id="emailLogin" name="Email" className="form-control input-lg" placeholder="Email address" />
+                    <h2>Please sign in</h2>
+                    <div id="loginForm" name="loginForm">
+                        <form method="POST" action="/Account/Login">
+                            <div className="col-lg-12">
+                                <input type="email" id="emailLogin" name="Email" className="form-control input-lg" placeholder="Email address" />
+                            </div>
+                            <div className="col-lg-12">
+                                <input type="password" id="passwordLogin" name="Password" className="form-control input-lg" placeholder="Password" />
+                            </div>
+                            <button type="submit" id="submitLogin" className="btn btn-warning btn-lg">Log in </button>
+                        </form>
                     </div>
-                    <div className="col-lg-12">
-                        <input type="password" id="passwordLogin" name="Password" className="form-control input-lg" placeholder="Password" />
-                    </div>
-                    <button type="submit" id="submitLogin" className="btn btn-warning btn-lg">Log in </button>
-
+                    {popup}
                 </div>
-            </div>
 
-        )
+            )
+        }
+
     }
 }

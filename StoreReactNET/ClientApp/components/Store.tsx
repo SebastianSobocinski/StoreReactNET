@@ -8,7 +8,7 @@ import { User } from '../classess/User';
 import { AjaxQuery } from '../classess/AjaxQuery';
 
 import './Store.css';
-import { StoreVisuals } from '../visuals/StoreVisuals.js';
+import { StoreVisuals } from '../classess/StoreVisuals.js';
 
 import $ from 'jquery';
 import { NavBar } from './NavBar';

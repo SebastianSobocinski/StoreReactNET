@@ -14,7 +14,7 @@
     "aspnet-webpack-react": "^3.0.0",
     "awesome-typescript-loader": "3.2.1",
     "bootstrap": "3.3.7",
-    "css-loader": "0.28.4",
+    "css-loader": "^0.28.4",
     "event-source-polyfill": "0.0.9",
     "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "0.11.2",
@@ -36,8 +36,12 @@
     "material-icons-react": "^1.0.2",
     "query-string": "^6.1.0",
     "react-multi-bar-slider": "^1.1.0",
+    "react-notifications": "^1.4.3",
+    "react-popup": "^0.9.3",
     "react-resize-observer": "^1.0.3",
+    "react-s-alert": "^1.4.1",
     "react-url-query": "^1.4.0",
+    "reactjs-popup": "^1.1.4",
     "resize-observer-polyfill": "^1.5.0"
   }
 }

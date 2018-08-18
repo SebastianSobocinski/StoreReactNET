@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 
+import { Redirect } from 'react-router-dom';
 import { CartItem } from './CartItem';
 
 import './Cart.css';
@@ -37,6 +38,16 @@ export class Cart extends React.Component
         let pos = cart.indexOf(el);
         cart[pos].quantity = quantity;
     }
+    calculateTotalValue()
+    {
+        let price = 0;
+        this.state.cart.forEach((el) =>
+        {
+            price += el.productPrice * el.quantity;
+        });
+        price = price * 1.23;
+        return price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + " PLN";
+    }
     render()
     {
         let View = null
@@ -47,11 +58,22 @@ export class Cart extends React.Component
                     <div id="cartItemsList" className="col-xs-12 container">
                         {this.renderCartItems()}
                     </div>
-                    <div className="cartBottom col-xs-12 container">
-                        <button id="cartApply" onClick={() => this.props.cart.reCalculate()} className="btn btn-warning">Apply</button>
+                    <div id="cartBottom" className="col-xs-12 container">
+                        <div id="cartTotalValue" className="col-xs-12 col-sm-3 col-sm-offset-9">Total: {this.calculateTotalValue()}</div>
+                        <div id="cartButtons" className="col-xs-12 col-sm-3 col-sm-offset-9 container">
+
+                            <button id="cartApply" onClick={() => this.props.cart.reCalculate()} className="btn btn-warning col-xs-5 col-xs-offset-1">Apply</button>
+                            <button id="cartSubmitOrder" className="btn btn-primary col-xs-5 col-xs-offset-1">Order</button>
+                        </div>
+
+
                     </div>
                 </div>
             )
+        }
+        else
+        {
+            View = <Redirect to='/' />
         }
         return View;
     }

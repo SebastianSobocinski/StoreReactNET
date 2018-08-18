@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using StoreReactNET.Models;
 using StoreReactNET.Models.Database;
 using StoreReactNET.Models.ViewModels;
+using StoreReactNET.Services;
 
 namespace StoreReactNET.Controllers
 {
@@ -113,6 +114,37 @@ namespace StoreReactNET.Controllers
             }
             
             return Json(respond);
+        }
+        [HttpGet]
+        public ActionResult GetClickedProduct(int ProductID)
+        {
+            var db = new StoreASPContext();
+
+            var result = db.Products
+                           .Where(c => c.Id == ProductID)
+                           .Include(c => c.ProductCategory)
+                           .Include(c => c.ProductImages)
+                           .Include(c => c.ProductDetails)
+                           .FirstOrDefault();
+
+            if(result != null)
+            {
+                var respond = new
+                {
+                    success = true,
+                    product = new ClickedProductViewModel(result)
+                };
+                return Json(respond);
+            }
+            else
+            {
+                var respond = new
+                {
+                    success = false,
+                    product = ""
+                };
+                return Json(respond);
+            }
         }
         [HttpGet]
         public ActionResult GetSearchedProducts(string Query, int Page, string OrderBy)

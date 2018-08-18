@@ -13,7 +13,7 @@ export class Search extends React.Component
         super(props)
 
         const queryString = require('query-string');
-        var parsed = queryString.parse(this.props.location.search);
+        let parsed = queryString.parse(this.props.location.search);
         if (parsed.query == "")
         {
             parsed.query = null;

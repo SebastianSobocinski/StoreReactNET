@@ -1,37 +1,40 @@
-﻿#loginContainer 
+﻿#registerContainer 
 {
     float: none;
     margin: 0 auto;
 }
-
-#loginContainer > h2 
+#registerContainer > h2 
 {
     text-align: center;
 }
 
-#loginForm
+#registerForm 
 {
     margin: 0 auto;
 }
 
-#loginContainer input 
+.registerInputDiv
 {
-    display: block;
     margin-top: 20px;
 }
-
-#loginContainer button
+#registerContainer button 
 {
     display: block;
     margin: 0 auto;
 }
-#passwordLogin 
+.error 
+{
+    background: #f4e9e9;
+    border:2px solid red;
+}
+#rePasswordRegister 
 {
     margin-bottom: 20px;
 }
+
 @media (min-width: 767px) 
 {
-    #loginForm 
+    #registerForm 
     {
         width: 60%;
     }

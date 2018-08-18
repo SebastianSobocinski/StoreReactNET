@@ -8,14 +8,14 @@ import { Footer } from './Footer';
 import { Login } from './Login';
 import { Cart } from './Cart';
 import { Store } from './Store';
+import { ClickedProduct } from './ClickedProduct';
 import { Search } from './Search';
 import { User } from '../classess/User';
 import { AjaxQuery } from '../classess/AjaxQuery';
 
 import $ from 'jquery';
 import './App.css';
-
-
+import { Register } from './Register';
 
 export class App extends React.Component
 {
@@ -68,6 +68,7 @@ export class App extends React.Component
         currentState.cart = await AjaxQuery.updateCartSession(this.state.cart);
         this.setState(currentState);
     }
+
     render()
     {
         let mainProps =
@@ -87,10 +88,12 @@ export class App extends React.Component
             <div id="mainBody" className="container">
                 <Switch>
                     <Route exact path="/" render={() => <Store data={mainProps} />} />
-                    <Route exact path="/Account/Login" render={() => <Login data={mainProps} />} />
+                    <Route path="/Account/Login" render={(props) => <Login data={mainProps} {...props} />} />
+                    <Route exact path="/Account/Register" render={(props) => <Register data={mainProps} {...props} />} />
                     <Route exact path="/Account/Cart" render={() => <Cart data={mainProps} cart={cartProps}/>} />
                     <Route exact path="/Store" render={() => <Store data={mainProps}/>} />
                     <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
+                    <Route path="/Products/:productID" render={(props) => <ClickedProduct data={mainProps} {...props} />} />
                     <Route path="/Search" render={(props) => <Search data={mainProps} {...props}/>} />
                 </Switch>
             </div>

@@ -82,7 +82,7 @@ export class CartItem extends React.Component
                         {this.state.productName}
                     </p>
                     <div className="cartItemQuantity col-xs-6 col-xs-offset-3 col-sm-3 col-sm-offset-0">
-                        <input type="number" onChange={this.setQuantity.bind(this)} min="0" max="10" placeholder={this.state.quantity} className="form-control cartItemQuantityInput" />
+                        <input type="number" onChange={this.setQuantity.bind(this)} min="0" max="10" defaultValue={this.state.quantity} step="1"  className="form-control cartItemQuantityInput" />
                     </div>
                     <div className="cartItemPrice col-xs-6 col-xs-offset-3 col-sm-5 col-sm-offset-0">
                         {this.formatPrice()}
