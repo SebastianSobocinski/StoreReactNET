@@ -13,7 +13,6 @@ namespace StoreReactNET.Models.ViewModels
         public string StreetName { get; set; }
         [Required]
         public string HomeNr { get; set; }
-        [Required]
         public string AppartmentNr { get; set; }
         [Required]
         public string Zipcode { get; set; }

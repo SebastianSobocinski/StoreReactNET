@@ -87,17 +87,15 @@ export class Profile extends React.Component
     static validateAddress(event)
     {
         let form = event.target;
-
         let reg = /^[a-zA-Z]+$/;
         let reg2 = /^[\d]{3,10}$/;
-
+        console.log(form);
         let zipCode = form["ZipCode"];
         let zipCodeValue = parseInt(zipCode.value);
-        let streetName = form["StreetName"]
-        let homeNr = form["HomeNr"]
-        let appratmentNr = form["AppartmentNr"]
+        let streetName = form["StreetName"];
+        let homeNr = form["HomeNr"];
         let city = form["City"];
-
+        console.log(form["Country"].value)
         if (streetName.value.length < 3)
         {
             streetName.classList.add("error");
@@ -106,11 +104,6 @@ export class Profile extends React.Component
         if (homeNr.value.length < 1)
         {
             homeNr.classList.add("error");
-            event.preventDefault();
-        }
-        if (appartmentNr.value.length < 1)
-        {
-            appartmentNr.classList.add("error");
             event.preventDefault();
         }
         if (!reg2.test(zipCodeValue))
@@ -167,15 +160,19 @@ export class Profile extends React.Component
         }
         form.style.display = "block";
     }
-    updateCountry(event)
-    {
-        document.forms["userAddressesForm"]["Country"].value = event.target.value;
-    }
     renderAddressesList()
     {
         return this.state.userAddresses.map((obj) =>
         {
-            return <option key={obj.id} value={obj.id}>{obj.streetName + " " + obj.homeNr +"/" + obj.appartmentNr + ", " + obj.city + ", "+ obj.country}</option>
+            if (obj.appartmentNr == null)
+            {
+                return <option key={obj.id} value={obj.id}>{obj.streetName + " " + obj.homeNr + ", " + obj.city + ", " + obj.country}</option>
+            }
+            else
+            {
+                return <option key={obj.id} value={obj.id}>{obj.streetName + " " + obj.homeNr + "/" + obj.appartmentNr + ", " + obj.city + ", " + obj.country}</option>
+            }
+            
         })
     }
     render()
@@ -306,8 +303,7 @@ export class Profile extends React.Component
                                     Country
                                 </label>
                                 <div className="col-xs-12 col-sm-4">
-                                    <input type="text" name="Country" style={{ display: "none" }} />
-                                    <Countries id="countriesValue" className="form-control" empty="Select Country" onChange={this.updateCountry} />
+                                    <Countries id="countriesValue" className="form-control" empty="Select Country" name="Country" />
                                 </div>
 
                                 <div className="col-xs-12">
@@ -503,8 +499,7 @@ export class ProfileAddAddress extends React.Component
                         Country
                     </label>
                     <div className="col-xs-12 col-sm-4">
-                        <input type="text" name="Country" style={{ display: "none" }} />
-                        <Countries className="form-control" empty="Select Country" onChange={this.updateCountry} />
+                        <Countries className="form-control" empty="Select Country" name="Country" />
                     </div>
                     <div className="col-xs-12">
                         <button className="btn btn-primary"> Apply </button>
