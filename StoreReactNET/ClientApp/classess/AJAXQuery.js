@@ -280,4 +280,33 @@ export class AjaxQuery
                 });
         });
     }
+    static async removeUserAddress(id)
+    {
+        return new Promise((resolve) =>
+        {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "Account/RemoveUserAddress",
+                    data: 
+                    {
+                        Id: id
+                    },
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            window.location = window.location.origin;
+                            resolve();
+
+                        }
+                        else
+                        {
+                            alert("Something went wrong");
+                            resolve();
+                        }
+                    }
+                });
+        });
+    }
 }

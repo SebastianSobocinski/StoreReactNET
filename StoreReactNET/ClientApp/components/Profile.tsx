@@ -133,6 +133,7 @@ export class Profile extends React.Component
 
 
     }
+
     openSelectedAddress(event)
     {
         let addressID = event.target.value;
@@ -160,6 +161,16 @@ export class Profile extends React.Component
         }
         form.style.display = "block";
     }
+    removeAddress(event)
+    {
+        event.preventDefault();
+
+        let form = document.forms["userAddressesForm"];
+        let addressID = form["Id"].value;
+        AjaxQuery.removeUserAddress(addressID;
+
+    }
+
     renderAddressesList()
     {
         return this.state.userAddresses.map((obj) =>
@@ -308,6 +319,7 @@ export class Profile extends React.Component
 
                                 <div className="col-xs-12">
                                     <button className="btn btn-primary"> Apply </button>
+                                    <button className="btn btn-danger" onClick={this.removeAddress}> Remove </button>
                                 </div>
 
                             </form>

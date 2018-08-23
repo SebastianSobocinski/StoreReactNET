@@ -264,6 +264,42 @@ namespace StoreReactNET.Controllers
 
             return Redirect("/");
         }
+        [HttpPost]
+        public async Task<ActionResult> RemoveUserAddress(int Id)
+        {
+            var respond = new
+            {
+                success = false
+            };
+            var session = HttpContext.Session.GetString("user");
+
+            if(session != null)
+            {
+                var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
+
+                var db = new StoreASPContext();
+                var result = db.UserAdresses
+                               .Where(c =>
+                                    c.Id == Id
+                                    &&
+                                    uservm.ID == c.UserId.ToString()
+                                    )
+                               .FirstOrDefault();
+
+                if(result != null)
+                {
+                    db.UserAdresses.Remove(result);
+                    await db.SaveChangesAsync();
+
+                    respond = new
+                    {
+                        success = true
+                    };
+                }
+            }
+
+            return Json(respond);
+        }
 
     }
 }
