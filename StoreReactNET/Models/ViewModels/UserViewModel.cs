@@ -10,13 +10,13 @@ namespace StoreReactNET.Models.ViewModels
     public class UserViewModel
     {
         [JsonProperty("id")]
-        public string ID { get; }
+        public string ID { get; set; }
         [JsonProperty("email")]
-        public string Email { get; }
+        public string Email { get; set; }
         [JsonProperty("firstName")]
-        public string FirstName { get; }
+        public string FirstName { get; set; }
         [JsonProperty("lastName")]
-        public string LastName { get; }
+        public string LastName { get; set; }
 
         public UserViewModel(Users _user)
         {
@@ -27,7 +27,7 @@ namespace StoreReactNET.Models.ViewModels
                 FirstName = _user.UserDetails.Name;
                 LastName = _user.UserDetails.FullName;
             }
-            catch(Exception ex) { }
+            catch(Exception) { }
 
 
         }

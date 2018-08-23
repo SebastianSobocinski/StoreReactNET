@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +41,7 @@
     <None Remove="ClientApp\components\NavBar.tsx" />
     <None Remove="ClientApp\components\Popup.tsx" />
     <None Remove="ClientApp\components\Product.tsx" />
+    <None Remove="ClientApp\components\Profile.tsx" />
     <None Remove="ClientApp\components\Register.tsx" />
     <None Remove="ClientApp\components\Search.tsx" />
     <None Remove="ClientApp\components\SearchBar.tsx" />
@@ -67,6 +73,7 @@
     <TypeScriptCompile Include="ClientApp\components\NavBar.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Popup.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Product.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\Profile.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Register.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Search.tsx" />
     <TypeScriptCompile Include="ClientApp\components\SearchBar.tsx" />
@@ -75,10 +82,6 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClientApp\visuals\" />
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
@@ -98,8 +101,8 @@
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec Command="npm install" />
-    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js --env.prod" />
-    <Exec Command="node node_modules/webpack/bin/webpack.js --env.prod" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js" />
+    <Exec Command="node node_modules/webpack/bin/webpack.js" />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>

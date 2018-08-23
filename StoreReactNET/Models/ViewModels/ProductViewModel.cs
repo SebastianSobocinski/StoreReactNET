@@ -43,7 +43,7 @@ namespace StoreReactNET.Models.ViewModels
                     this.ProductImages.Add(image.ImageName);
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
 
         }
     }

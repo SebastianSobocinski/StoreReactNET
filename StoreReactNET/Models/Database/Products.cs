@@ -7,7 +7,6 @@ namespace StoreReactNET.Models.Database
     {
         public Products()
         {
-            CartItems = new HashSet<CartItems>();
             ProductDetails = new HashSet<ProductDetails>();
             ProductImages = new HashSet<ProductImages>();
         }
@@ -21,7 +20,6 @@ namespace StoreReactNET.Models.Database
 
         public ProductCategories ProductCategory { get; set; }
         public ProductDetails ProductDetailsNavigation { get; set; }
-        public ICollection<CartItems> CartItems { get; set; }
         public ICollection<ProductDetails> ProductDetails { get; set; }
         public ICollection<ProductImages> ProductImages { get; set; }
     }

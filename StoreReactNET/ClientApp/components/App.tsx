@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import ResizeObserver from 'resize-observer-polyfill';
-
 
 import { NavBar } from './NavBar';
 import { Footer } from './Footer';
 import { Login } from './Login';
+import { Register } from './Register';
+import { Profile } from './Profile';
+import { ProfileAddDetails } from './Profile';
+import { ProfileAddAddress } from './Profile';
 import { Cart } from './Cart';
 import { Store } from './Store';
 import { ClickedProduct } from './ClickedProduct';
@@ -15,7 +17,7 @@ import { AjaxQuery } from '../classess/AjaxQuery';
 
 import $ from 'jquery';
 import './App.css';
-import { Register } from './Register';
+
 
 export class App extends React.Component
 {
@@ -25,29 +27,30 @@ export class App extends React.Component
         this.state =
         {
             user: null,
-            cart: []
+            cart: [],
+            loading: true
         }
 
         this.setUser = this.setUser.bind(this);
         this.addToCart = this.addToCart.bind(this);
         this.reCalculate = this.reCalculate.bind(this);
     }
-
-    async componentDidMount()
+    componentWillMount()
     {
         let currentState = this.state;
-        currentState.user = await AjaxQuery.getUserSession();
-        currentState.cart = await AjaxQuery.getCartSession();
-        this.setState(currentState);
-
-        let navBar = document.getElementById('navigationBar');
-        new ResizeObserver(() =>
+        let p1 = AjaxQuery.getUserSession().then((value) =>
         {
-            let navBarHeight = navBar.clientHeight;
-            document.getElementById('mainBody').style.marginTop = navBarHeight + 'px';
-
-        }).observe(navBar);
-
+            currentState.user = value;
+        });
+        let p2 = AjaxQuery.getCartSession().then((value) =>
+        {
+            currentState.cart = value;
+        });
+        Promise.all([p1, p2]).then(() =>
+        {
+            currentState.loading = false;
+            this.setState(currentState);
+        })
     }
 
     async setUser(_user)
@@ -71,6 +74,7 @@ export class App extends React.Component
 
     render()
     {
+
         let mainProps =
         {
             user: this.state.user,
@@ -82,23 +86,35 @@ export class App extends React.Component
         {
             reCalculate: this.reCalculate
         }
-
-        return <div className='container-fluid'>
-            <NavBar data={mainProps} />
-            <div id="mainBody" className="container">
-                <Switch>
-                    <Route exact path="/" render={() => <Store data={mainProps} />} />
-                    <Route path="/Account/Login" render={(props) => <Login data={mainProps} {...props} />} />
-                    <Route exact path="/Account/Register" render={(props) => <Register data={mainProps} {...props} />} />
-                    <Route exact path="/Account/Cart" render={() => <Cart data={mainProps} cart={cartProps}/>} />
-                    <Route exact path="/Store" render={() => <Store data={mainProps}/>} />
-                    <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
-                    <Route path="/Products/:productID" render={(props) => <ClickedProduct data={mainProps} {...props} />} />
-                    <Route path="/Search" render={(props) => <Search data={mainProps} {...props}/>} />
-                </Switch>
-            </div>
-            <Footer data={mainProps}/>
-        </div>
+        if (this.state.loading)
+        {
+            return null;
+        }
+        else
+        {
+            return (
+                <div className='container-fluid'>
+                    <NavBar data={mainProps} />
+                    <div id="mainBody" className="container">
+                        <Switch>
+                            <Route exact path="/" render={() => <Store data={mainProps} />} />
+                            <Route path="/Account/Login" render={(props) => <Login data={mainProps} {...props} />} />
+                            <Route path="/Account/Register" render={(props) => <Register data={mainProps} {...props} />} />
+                            <Route exact path="/Account/Profile" render={() => <Profile data={mainProps} />} />
+                            <Route exact path="/Account/Profile/AddDetails" render={() => <ProfileAddDetails data={mainProps} />} />
+                            <Route exact path="/Account/Profile/AddAddress" render={() => <ProfileAddAddress data={mainProps} />} />
+                            <Route exact path="/Account/Cart" render={() => <Cart data={mainProps} cart={cartProps} />} />
+                            <Route exact path="/Store" render={() => <Store data={mainProps} />} />
+                            <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
+                            <Route path="/Products/:productID" render={(props) => <ClickedProduct data={mainProps} {...props} />} />
+                            <Route path="/Search" render={(props) => <Search data={mainProps} {...props} />} />
+                        </Switch>
+                    </div>
+                    <Footer data={mainProps} />
+                </div>
+                )
+        }
+        
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { Link, NavLink, Redirect } from 'react-router-dom';
-
+import ReactLoading from 'react-loading';
 
 import { Product } from './Product';
 import { User } from '../classess/User';
@@ -28,7 +28,8 @@ export class Store extends React.Component
             productsList: [],
             productFilters: [],
             selectedFilters: null,
-            orderBy: "relevance"
+            orderBy: "relevance",
+            loading: true,
         }
         this.updateState(this.props);
     }
@@ -62,6 +63,7 @@ export class Store extends React.Component
         currentState.allCategories = await AjaxQuery.getAllCategories();
         currentState.categoryName = await this.getSelectedCategoryName(currentState);
         currentState.productFilters = await AjaxQuery.getAllFiltersFromCategory(currentState.categoryID);
+        currentState.loading = false;
         this.setState(currentState);
         
     }
@@ -69,24 +71,22 @@ export class Store extends React.Component
     {
         this.updateState(nextProps);
     }
-    async componentDidMount()
+
+    openCategories()
     {
-        document.getElementById("sideCategoryTitle").addEventListener("click", () =>
+        let categoryList = document.getElementById("sideCategoryList");
+        if (StoreVisuals.getCategoriesOpen())
         {
-            let categoryList = document.getElementById("sideCategoryList");
-            if (StoreVisuals.getCategoriesOpen())
-            {
-                let startSize = categoryList.clientHeight;
-                requestAnimationFrame(() => StoreVisuals.animateCategories(startSize, startSize, 0))
-                StoreVisuals.setCategoriesOpen(false);
-            }
-            else
-            {
-                let desiredSize = categoryList.scrollHeight;
-                StoreVisuals.setCategoriesOpen(true);
-                requestAnimationFrame(() => StoreVisuals.animateCategories(0, 0, desiredSize))
-            }
-        })
+            let startSize = categoryList.clientHeight;
+            requestAnimationFrame(() => StoreVisuals.animateCategories(startSize, startSize, 0))
+            StoreVisuals.setCategoriesOpen(false);
+        }
+        else
+        {
+            let desiredSize = categoryList.scrollHeight;
+            StoreVisuals.setCategoriesOpen(true);
+            requestAnimationFrame(() => StoreVisuals.animateCategories(0, 0, desiredSize))
+        }
     }
 
     async getSelectedCategoryName(state)
@@ -250,6 +250,10 @@ export class Store extends React.Component
  
     render()
     {
+        if (this.state.loading)
+        {
+            return <ReactLoading type="bubbles" color="#333" />
+        }
         let View = (
 
             <div id="storeContainer" className="container">
@@ -271,7 +275,7 @@ export class Store extends React.Component
                 <aside className="col-md-3 col-xs-12 container">
                     <div id="asideContainer">
                         <div id="sideCategoryTitle" className="col-xs-12 container">
-                            <a id="sideCategoryTitleHeader" className="sideHeader"> Categories </a>
+                            <a id="sideCategoryTitleHeader" className="sideHeader" onClick={this.openCategories}> Categories </a>
                         </div>
                         <ul id="sideCategoryList" className="col-xs-12 container">
                             {this.renderCategories()}

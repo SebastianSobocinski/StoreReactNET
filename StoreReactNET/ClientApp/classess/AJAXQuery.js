@@ -15,7 +15,7 @@ export class AjaxQuery
                     {
                         if (respond.isEstablished)
                         {
-                            result = JSON.parse(respond.user)
+                            result = JSON.parse(respond.user);
                         }
                         resolve(result);
                     }
@@ -223,6 +223,57 @@ export class AjaxQuery
                         else
                         {
                             result = [];
+                        }
+                        resolve(result);
+                    }
+                });
+        });
+    }
+
+    static async getUserDetails()
+    {
+        return new Promise((resolve) =>
+        {
+            let result = null;
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Account/GetUserDetails",
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            let time = respond.userDetails.dateOfBirth.split("T")[0];
+                            respond.userDetails.dateOfBirth = time;
+                            result = respond.userDetails
+                        }
+                        resolve(result);
+                    }
+                });
+        });
+    }
+    static async getUserAddresses()
+    {
+        return new Promise((resolve) =>
+        {
+            let result = null;
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Account/GetUserAddresses",
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            if (respond.userAddresses.length > 0)
+                            {
+                                result = respond.userAddresses
+                            }
+                            else
+                            {
+                                result = null
+                            }
+
                         }
                         resolve(result);
                     }

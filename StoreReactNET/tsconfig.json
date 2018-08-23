@@ -1,5 +1,6 @@
 {
-  "compilerOptions": {
+  "compilerOptions": 
+  {
     "baseUrl": ".",
     "module": "es2015",
     "moduleResolution": "node",
@@ -11,8 +12,9 @@
     "types": [ "webpack-env" ],
     "noEmitOnError": true
   },
-  "exclude": [
-      "bin",
-      "node_modules"
+  "exclude": 
+  [
+    "bin",
+    "node_modules"
   ]
 }

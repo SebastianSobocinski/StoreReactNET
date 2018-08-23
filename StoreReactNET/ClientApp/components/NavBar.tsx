@@ -4,6 +4,8 @@ import "./Navbar.css"
 import { User } from '../classess/User';
 import { AjaxQuery } from '../classess/AjaxQuery';
 
+import ResizeObserver from 'resize-observer-polyfill';
+
 import $ from 'jquery';
 
 export class NavBar extends React.Component
@@ -32,7 +34,16 @@ export class NavBar extends React.Component
         currentState.cart = nextProps.data.cart;
         this.setState(currentState)
     }
+    componentDidMount()
+    {
+        let navBar = document.getElementById('navigationBar');
+        new ResizeObserver(() =>
+        {
+            let navBarHeight = navBar.clientHeight;
+            document.getElementById('mainBody').style.marginTop = navBarHeight + 'px';
 
+        }).observe(navBar);
+    }
 
     componentDidUpdate()
     {

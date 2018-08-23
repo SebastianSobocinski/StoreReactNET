@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { SearchBar } from './SearchBar';
 import { Product } from './Product'; 
-
+import ReactLoading from 'react-loading';
 import './Search.css';
 
 import { AjaxQuery } from "../classess/AJAXQuery";
@@ -24,7 +24,8 @@ export class Search extends React.Component
             query: parsed.query,
             page: 1,
             productsList: [],
-            orderBy: "relevance"
+            orderBy: "relevance",
+            loading: true
         }
         this.loadResults();
     }
@@ -43,6 +44,7 @@ export class Search extends React.Component
             .then((value) =>
             {
                 currentState.productsList = value;
+                currentState.loading = false;
                 this.setState(currentState);
             })
         
@@ -75,6 +77,10 @@ export class Search extends React.Component
 
     render()
     {
+        if (this.state.loading)
+        {
+            return <ReactLoading type="bubbles" color="#333" />
+        }
         return (
             <div id="searchContainer" className="col-xs-12 container">
                 <div id="searchTopBar" className="col-xs-12 container">

@@ -1,5 +1,6 @@
 ﻿import * as React from 'react';
 import { Link, NavLink, Redirect } from 'react-router-dom';
+import ReactLoading from 'react-loading';
 
 import { AjaxQuery } from '../classess/AjaxQuery';
 import { Product } from './Product';
@@ -14,7 +15,8 @@ export class ClickedProduct extends React.Component
         super(props);
         this.state =
         {
-            product: null
+            product: null,
+            loading: true
         }
         this.getProduct();
     }
@@ -22,6 +24,7 @@ export class ClickedProduct extends React.Component
     {
         let currentState = this.state;
         currentState.product = await AjaxQuery.getClickedProduct(this.props.match.params.productID)
+        currentState.loading = false;
         this.setState(currentState);
     }
     renderDetails()
@@ -42,9 +45,9 @@ export class ClickedProduct extends React.Component
     }
     render()
     {
-        if (this.state.product == null)
+        if (this.state.loading)
         {
-            return null;
+            return <ReactLoading type="bubbles" color="#333" />
         }
         else
         {

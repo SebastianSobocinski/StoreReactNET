@@ -28,20 +28,23 @@
     "style-loader": "0.18.2",
     "typescript": "2.4.1",
     "url-loader": "0.5.9",
-    "webpack": "2.5.1",
+    "webpack": "4.17.1",
     "webpack-hot-middleware": "2.18.2"
   },
   "dependencies": {
     "css-element-queries": "^1.0.2",
     "material-icons-react": "^1.0.2",
     "query-string": "^6.1.0",
+    "react-country-select": "^1.0.5",
+    "react-loading": "^2.0.3",
     "react-multi-bar-slider": "^1.1.0",
     "react-notifications": "^1.4.3",
     "react-popup": "^0.9.3",
     "react-resize-observer": "^1.0.3",
     "react-s-alert": "^1.4.1",
+    "react-select-country": "0.0.15",
     "react-url-query": "^1.4.0",
-    "reactjs-popup": "^1.1.4",
+    "reactjs-popup": "^1.2.0",
     "resize-observer-polyfill": "^1.5.0"
   }
 }

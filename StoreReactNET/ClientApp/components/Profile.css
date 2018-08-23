@@ -1,0 +1,117 @@
+﻿#profileContainer
+{
+    padding: 0;
+    margin-top:25px;
+}
+#profileDetails
+{
+    padding: 0;
+
+}
+#profileDetailsHeader
+{
+    font-weight: bold;
+    padding: 5px 0;
+    border-bottom:1px solid #efefef;
+}
+#profileDetailsList
+{
+    min-height: 250px;
+    position: relative;
+}
+.profileSection 
+{
+    margin-top: 20px;
+    padding: 0;
+
+}
+.profileSection div
+{
+    padding: 0;
+}
+.profileSection label
+{
+    padding: 0;
+    font-weight: bold;
+}
+.profileSection input 
+{
+    margin-bottom: 10px;
+}
+.profileSectionNull 
+{
+    color: #333;
+    position: absolute;
+    cursor: pointer;
+    top: 40%;
+}
+
+.profileSectionNull > i
+{
+    display: block;
+    text-align: center;
+}
+.profileSectionNullText 
+{
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+}
+#profileAddresses
+{
+    padding:0;
+}
+#profileAddressesHeader 
+{
+    font-weight: bold;
+    padding: 5px 0;
+    border-bottom: 1px solid #efefef;
+}
+#profileAddressesList
+{
+    min-height: 250px;
+    position: relative;
+}
+#profileAddNewAddressIcon > i
+{
+    margin-left: 10px;
+    line-height: 34px;
+    height: 34px;
+}
+#userAddressesForm
+{
+    display: none;
+
+}
+#userAddressesForm button
+{
+    margin-top: 10px;
+}
+#userAddressesFormContainer
+{
+    margin-top:25px;
+}
+#profileAddDetailsContainer
+{
+    padding: 0;
+    margin-top:25px;
+}
+#profileAddDetailsContainer button 
+{
+    margin-top:10px;
+}
+.error 
+{
+    background: #f4e9e9;
+    border: 2px solid red;
+}
+#profileAddAddressContainer 
+{
+    padding: 0;
+    margin-top: 25px;
+}
+#profileAddAddressContainer button
+{
+
+    margin-top: 10px;
+}
