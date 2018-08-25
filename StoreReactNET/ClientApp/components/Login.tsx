@@ -49,7 +49,7 @@ export class Login extends React.Component
             let popup = null
             if (this.state.failed)
             {
-                popup = <Popup title="Wrong email or password." />
+                popup = <Popup type="alertError" title="Wrong email or password." />
             }
             return (
 

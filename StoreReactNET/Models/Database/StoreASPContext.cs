@@ -38,9 +38,7 @@ namespace StoreReactNET.Models.Database
         {
             modelBuilder.Entity<OrderItems>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
@@ -51,9 +49,7 @@ namespace StoreReactNET.Models.Database
 
             modelBuilder.Entity<Orders>(entity =>
             {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
@@ -147,9 +143,7 @@ namespace StoreReactNET.Models.Database
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AppartmentNr)
-                    .IsRequired()
-                    .HasColumnName("AppartmentNR");
+                entity.Property(e => e.AppartmentNr).HasColumnName("AppartmentNR");
 
                 entity.Property(e => e.City).IsRequired();
 
@@ -170,7 +164,7 @@ namespace StoreReactNET.Models.Database
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.DateOfBirth).IsRequired();
+                entity.Property(e => e.DateOfBirth).HasColumnType("date");
 
                 entity.Property(e => e.FullName).IsRequired();
 

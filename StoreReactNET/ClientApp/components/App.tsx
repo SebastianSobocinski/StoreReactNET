@@ -9,6 +9,7 @@ import { Profile } from './Profile';
 import { ProfileAddDetails } from './Profile';
 import { ProfileAddAddress } from './Profile';
 import { Cart } from './Cart';
+import { Order } from './Order';
 import { Store } from './Store';
 import { ClickedProduct } from './ClickedProduct';
 import { Search } from './Search';
@@ -51,6 +52,19 @@ export class App extends React.Component
             currentState.loading = false;
             this.setState(currentState);
         })
+    }
+    checkIfTimedOut()
+    {
+        AjaxQuery.getUserSession().then((value) =>
+        {
+            let currentState = this.state;
+            if (value != currentState.user)
+            {
+                currentState.user = value;
+                this.setState(currentState);
+                setTimeout(this.checkIfTimedOut, 60000)
+            }
+        });
     }
 
     async setUser(_user)
@@ -104,6 +118,7 @@ export class App extends React.Component
                             <Route exact path="/Account/Profile/AddDetails" render={() => <ProfileAddDetails data={mainProps} />} />
                             <Route exact path="/Account/Profile/AddAddress" render={() => <ProfileAddAddress data={mainProps} />} />
                             <Route exact path="/Account/Cart" render={() => <Cart data={mainProps} cart={cartProps} />} />
+                            <Route exact path="/Order" render={() => <Order data={mainProps} />} />
                             <Route exact path="/Store" render={() => <Store data={mainProps} />} />
                             <Route path="/Store/:categoryID?/:page?" render={(props) => <Store data={mainProps} {...props} />} />
                             <Route path="/Products/:productID" render={(props) => <ClickedProduct data={mainProps} {...props} />} />

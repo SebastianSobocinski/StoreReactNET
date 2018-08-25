@@ -108,7 +108,7 @@ export class Register extends React.Component
             let popup;
             if (this.state.failCode != null)
             {
-                popup = <Popup title={errosEnum[this.state.failCode]} />
+                popup = <Popup type="alertError" title={errosEnum[this.state.failCode]} />
             }
             return (
                 <div id="registerContainer" className="col-lg-8">

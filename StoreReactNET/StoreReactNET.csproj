@@ -39,6 +39,7 @@
     <None Remove="ClientApp\components\Footer.tsx" />
     <None Remove="ClientApp\components\Login.tsx" />
     <None Remove="ClientApp\components\NavBar.tsx" />
+    <None Remove="ClientApp\components\Order.tsx" />
     <None Remove="ClientApp\components\Popup.tsx" />
     <None Remove="ClientApp\components\Product.tsx" />
     <None Remove="ClientApp\components\Profile.tsx" />
@@ -71,6 +72,7 @@
     <TypeScriptCompile Include="ClientApp\components\App.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Login.tsx" />
     <TypeScriptCompile Include="ClientApp\components\NavBar.tsx" />
+    <TypeScriptCompile Include="ClientApp\components\Order.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Popup.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Product.tsx" />
     <TypeScriptCompile Include="ClientApp\components\Profile.tsx" />

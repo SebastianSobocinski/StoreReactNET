@@ -46,5 +46,10 @@
     "react-url-query": "^1.4.0",
     "reactjs-popup": "^1.2.0",
     "resize-observer-polyfill": "^1.5.0"
+  },
+  "scripts": 
+  {
+    "build": "webpack-dev-server --mode development --open",
+    "prod_build": "webpack --mode production"
   }
 }

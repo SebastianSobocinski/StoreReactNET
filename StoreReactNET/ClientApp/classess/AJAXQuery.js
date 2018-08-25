@@ -38,6 +38,10 @@ export class AjaxQuery
                         {
                             result = JSON.parse(respond.cart);
                         }
+                        else 
+                        {
+                            result = [];
+                        }
                         resolve(result);
                     }
                 });

@@ -9,6 +9,7 @@ export class Popup extends React.Component
         this.state =
         {
             title: this.props.title,
+            type: this.props.type,
             show: true
         }
         this.close = this.close.bind(this);
@@ -23,15 +24,24 @@ export class Popup extends React.Component
     {
         if (this.state.show)
         {
+            let buttonType = null;
+            if (this.state.type == "alertError")
+            {
+                buttonType = "btn-danger";
+            }
+            else if (this.state.type == "alertSuccess")
+            {
+                buttonType = "btn-success";
+            }
             return (
                 <div>
                     <div className="alertBackground">
                     </div>
-                    <div className="alertDiv col-xs-12 container">
+                    <div className={"alertDiv " + this.state.type + " col-xs-12 container"}>
                         <p className="alertMessage col-xs-12">
                             {this.state.title}
                         </p>
-                        <button className="alertButton btn btn-danger btn-lg col-xs-12" onClick={this.close}>
+                        <button className={"alertButton btn " + buttonType + " btn-lg col-xs-12" } onClick={this.close}>
                             OK
                     </button>
                     </div>

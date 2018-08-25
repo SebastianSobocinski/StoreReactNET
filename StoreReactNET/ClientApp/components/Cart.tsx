@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 
-import { Redirect } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import { CartItem } from './CartItem';
 
 import './Cart.css';
@@ -63,7 +63,9 @@ export class Cart extends React.Component
                         <div id="cartButtons" className="col-xs-12 col-sm-3 col-sm-offset-9 container">
 
                             <button id="cartApply" onClick={() => this.props.cart.reCalculate()} className="btn btn-warning col-xs-5 col-xs-offset-1">Apply</button>
-                            <button id="cartSubmitOrder" className="btn btn-primary col-xs-5 col-xs-offset-1">Order</button>
+                            <NavLink to={"/Order"}>
+                                <button id="cartSubmitOrder" className="btn btn-primary col-xs-5 col-xs-offset-1">Order</button>
+                            </NavLink>
                         </div>
 
 

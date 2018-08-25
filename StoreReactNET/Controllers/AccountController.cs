@@ -300,6 +300,64 @@ namespace StoreReactNET.Controllers
 
             return Json(respond);
         }
+        [HttpPost]
+        public async Task<ActionResult> SubmitOrder([FromForm]OrderViewModel collection)
+        {
+            if (ModelState.IsValid)
+            {
+                var sessionUser = HttpContext.Session.GetString("user");
+                var sessionCart = HttpContext.Session.GetString("cart");
 
+                if(sessionUser != null && sessionCart != null)
+                {
+                    var uservm = JsonConvert.DeserializeObject<UserViewModel>(sessionUser);
+                    var cartvm = JsonConvert.DeserializeObject<List<CartItemViewModel>>(sessionCart);
+
+                    var db = new StoreASPContext();
+
+                    var result = await db.UserAdresses
+                                        .Where(c =>
+                                            collection.AddressID == c.Id
+                                            &&
+                                            uservm.ID == c.UserId.ToString()
+                                            )
+                                        .FirstOrDefaultAsync();
+                    if(result != null)
+                    {
+                        try
+                        {
+                            var orderEntry = new Orders()
+                            {
+                                UserId = int.Parse(uservm.ID),
+                                UserAddressId = collection.AddressID,
+                                Date = DateTime.Now,
+                                Status = 0
+                            };
+
+                            await db.Orders.AddAsync(orderEntry);
+                            await db.SaveChangesAsync();
+
+                            foreach (var item in cartvm)
+                            {
+                                var entryItem = new OrderItems()
+                                {
+                                    OrderId = orderEntry.Id,
+                                    ProductId = int.Parse(item.ProductID),
+                                    Quantity = item.Quantity
+                                };
+                                await db.OrderItems.AddAsync(entryItem);
+                            }
+                            await db.SaveChangesAsync();
+                            HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(new List<CartItemViewModel>()));
+
+                        }
+                        
+                        catch (Exception) { }
+                        
+                    }
+                }
+            }
+            return Redirect("/");
+        }
     }
 }
