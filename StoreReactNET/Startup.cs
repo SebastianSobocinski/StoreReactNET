@@ -35,8 +35,8 @@ namespace StoreReactNET
                 app.UseDeveloperExceptionPage();
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
-                    HotModuleReplacement = true,
-                    ReactHotModuleReplacement = true
+                    HotModuleReplacement = false,
+                    ReactHotModuleReplacement = false
                 });
             }
             else

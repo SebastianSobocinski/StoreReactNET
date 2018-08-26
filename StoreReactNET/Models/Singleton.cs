@@ -10,6 +10,7 @@ namespace StoreReactNET.Models
         private static Dictionary<int, List<string>> _filtersRequired;
         private static Dictionary<string, string> _filtersDisplayName;
         private static Dictionary<string, string> _filtersClickedProductName;
+        private static Dictionary<int, string> _orderStatuses;
 
         public static Dictionary<int, List<string>> FiltersRequired
         {
@@ -93,7 +94,27 @@ namespace StoreReactNET.Models
                 }
             }
         }
-
+        public static Dictionary<int, string> OrderStatuses
+        {
+            get
+            {
+                if(_orderStatuses == null)
+                {
+                    _orderStatuses = new Dictionary<int, string>()
+                    {
+                        {0, "Order yet not accepted"},
+                        {1, "Order accepted" },
+                        {2, "Order sent to client" },
+                        {3, "Client received order" }
+                    };
+                    return _orderStatuses;
+                }
+                else
+                {
+                    return _orderStatuses;
+                }
+            }
+        }
 
 
 

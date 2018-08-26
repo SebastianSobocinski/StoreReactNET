@@ -8,13 +8,13 @@
     padding: 0;
 
 }
-#profileDetailsHeader
+.profileSectionHeader 
 {
     font-weight: bold;
     padding: 5px 0;
-    border-bottom:1px solid #efefef;
+    border-bottom: 1px solid #efefef;
 }
-#profileDetailsList
+.profileSectionList 
 {
     min-height: 250px;
     position: relative;
@@ -23,7 +23,6 @@
 {
     margin-top: 20px;
     padding: 0;
-
 }
 .profileSection div
 {
@@ -60,17 +59,6 @@
 #profileAddresses
 {
     padding:0;
-}
-#profileAddressesHeader 
-{
-    font-weight: bold;
-    padding: 5px 0;
-    border-bottom: 1px solid #efefef;
-}
-#profileAddressesList
-{
-    min-height: 250px;
-    position: relative;
 }
 #profileAddNewAddressIcon > i
 {
@@ -113,6 +101,42 @@
 }
 #profileAddAddressContainer button
 {
-
     margin-top: 10px;
+}
+#profileOrderDetails
+{
+    margin-bottom: 25px;
+}
+#profileOrderDetails h3 
+{
+
+    padding:0;
+}
+#profileOrdersList 
+{
+    padding: 0;
+}
+#profileOrdersList table th
+{
+    text-align: center;
+}
+#profileOrdersList table tr 
+{
+    text-align:center;
+}
+.profileOrderProduct
+{
+    line-height:50px;
+    text-align: center;
+    border-bottom:1px solid #efefef;
+    background: #ddd;
+}
+.profileOrderProductHeaders
+{
+    font-weight: bold;
+    text-align: center;
+}
+.orderID
+{
+    text-align: left;
 }

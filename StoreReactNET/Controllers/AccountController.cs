@@ -156,6 +156,49 @@ namespace StoreReactNET.Controllers
             
             return Json(respond);
         }
+        [HttpGet]
+        public ActionResult GetUserLatestOrders()
+        {
+            var respond = new
+            {
+                success = false,
+                userOrders = new List<OrderViewModel>()
+            };
+
+            var session = HttpContext.Session.GetString("user");
+            if(session != null)
+            {
+                var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
+
+                var db = new StoreASPContext();
+
+                var result = db.Orders
+                               .Where(c => uservm.ID == c.UserId.ToString())
+                               .OrderByDescending(c => c.Id)
+                               .Take(10)
+                               .ToList();
+
+
+                if(result.Count > 0)
+                {
+                    var ordersList = new List<OrderViewModel>();
+
+                    foreach(var item in result)
+                    {
+                        ordersList.Add(new OrderViewModel(item));
+                    }
+
+                    respond = new
+                    {
+                        success = true,
+                        userOrders = ordersList
+                    };
+                }
+            }
+
+
+            return Json(respond);
+        }
         [HttpPost]
         public async Task<ActionResult> SetDetails([FromForm]UserDetailsViewModel collection)
         {
@@ -288,7 +331,7 @@ namespace StoreReactNET.Controllers
 
                 if(result != null)
                 {
-                    db.UserAdresses.Remove(result);
+                    result.UserId = null;
                     await db.SaveChangesAsync();
 
                     respond = new
@@ -301,7 +344,7 @@ namespace StoreReactNET.Controllers
             return Json(respond);
         }
         [HttpPost]
-        public async Task<ActionResult> SubmitOrder([FromForm]OrderViewModel collection)
+        public async Task<ActionResult> SubmitOrder([FromForm]SentOrderViewModel collection)
         {
             if (ModelState.IsValid)
             {
@@ -359,5 +402,6 @@ namespace StoreReactNET.Controllers
             }
             return Redirect("/");
         }
+
     }
 }

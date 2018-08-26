@@ -284,6 +284,34 @@ export class AjaxQuery
                 });
         });
     }
+    static async getUserLatestOrders()
+    {
+        return new Promise((resolve) =>
+        {
+            let result = null;
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "Account/GetUserLatestOrders",
+                    success: (respond) =>
+                    {
+                        if (respond.success)
+                        {
+                            if (respond.userOrders.length > 0)
+                            {
+                                result = respond.userOrders
+                            }
+                            else
+                            {
+                                result = null
+                            }
+
+                        }
+                        resolve(result);
+                    }
+                });
+        });
+    }
     static async removeUserAddress(id)
     {
         return new Promise((resolve) =>

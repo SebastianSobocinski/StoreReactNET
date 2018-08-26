@@ -20,6 +20,7 @@ export class Profile extends React.Component
             user: this.props.data.user,
             userDetails: null,
             userAddresses: null,
+            orders: null,
             loading: true
         };
 
@@ -36,8 +37,11 @@ export class Profile extends React.Component
         {
             currentState.userAddresses = value;
         })
-
-        Promise.all([p1, p2]).then(() =>
+        let p3 = AjaxQuery.getUserLatestOrders().then((value) =>
+        {
+            currentState.orders = value;
+        });
+        Promise.all([p1, p2, p3]).then(() =>
         {
             currentState.loading = false;
             this.setState(currentState);
@@ -170,7 +174,29 @@ export class Profile extends React.Component
         AjaxQuery.removeUserAddress(addressID;
 
     }
+    openOrderDetails(order)
+    {
+        let container = document.getElementById("profileOrderDetails");
+        container.innerHTML = "";
 
+        let details = (
+            <div className="col-xs-12 container" >
+                <h3 className="col-xs-12"> {"Order #" + order.orderID} </h3>
+                <div className="col-xs-12 profileOrderProductHeaders">
+                    <div className="col-xs-2 orderID">Product ID</div>
+                    <div className="col-xs-5">Product Name</div>
+                    <div className="col-xs-2">Quantity</div>
+                    <div className="col-xs-3">Total Price</div>
+                </div>
+                <div className="col-xs-12">
+                    {this.renderOrderProducts(order)}
+                </div>
+            </div>
+            )
+        
+        ReactDOM.render(details, container);
+    }
+        
     renderAddressesList()
     {
         return this.state.userAddresses.map((obj) =>
@@ -186,6 +212,35 @@ export class Profile extends React.Component
             
         })
     }
+    renderOrdersList()
+    {
+        return this.state.orders.map((obj) =>
+        {
+            return (
+                <tr key={obj.orderID}>
+                    <th style={{ textAlign: "left", cursor: "pointer" }} scope="row" onClick={() => this.openOrderDetails(obj)}>{obj.orderID}</th>
+                    <td>{obj.date}</td>
+                    <td>{obj.status}</td>
+                    <td>{obj.totalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + " PLN"}</td>
+                </tr>
+                )
+        })
+    }
+    renderOrderProducts(order)
+    {
+        return order.orderProducts.map((obj) =>
+        {
+            return (
+                <div key={obj.productID} className="col-xs-12 profileOrderProduct">
+                    <div className="col-xs-2 orderID">{obj.productID}</div>
+                    <div className="col-xs-5">{obj.productName}</div>
+                    <div className="col-xs-2">{obj.quantity}</div>
+                    <div className="col-xs-3">{obj.productTotalPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ') + " PLN"}</div>
+                </div>
+            )
+
+        })
+    }
     render()
     {
         if (this.state.loading)
@@ -197,6 +252,8 @@ export class Profile extends React.Component
         {
             let details = null;
             let addresses = null;
+            let orders = null;
+
             if (this.state.userDetails != null)
             {
                 details = (
@@ -342,22 +399,66 @@ export class Profile extends React.Component
                 );
             }
 
+            if (this.state.orders != null)
+            {
+                orders = (
+                    <div className="profileSection col-xs-12 container">
+                        <div className="col-xs-12" id="profileOrderDetails">
+
+                        </div>
+                        <div className="col-xs-12">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style={{ textAlign: "left" }} className="col-xs-1"> # </th>
+                                        <th scope="col" className="col-xs-4">Date</th>
+                                        <th scope="col" className="col-xs-5">Status</th>
+                                        <th scope="col" className="col-xs-2">Total Price </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.renderOrdersList()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    )
+            }
+            else
+            {
+                orders = (
+                    <div className="profileSectionNull col-xs-12 col-sm-6 col-sm-offset-3">
+                        <p className="profileSectionNullText">
+                            You dont have any orders yet!
+                        </p>
+                    </div>
+                    )
+            }
+
             return (
                 <div id="profileContainer" className="col-xs-12 container">
                     <div id="profileDetails" className="col-xs-12 container">
-                        <h2 id="profileDetailsHeader" className="col-xs-12">
+                        <h2 id="profileDetailsHeader" className="col-xs-12 profileSectionHeader">
                             Profile Details
                         </h2>
-                        <div id="profileDetailsList" className="col-xs-12 container">
+                        <div id="profileDetailsList" className="col-xs-12 container profileSectionList">
                             {details}
                         </div>
                     </div>
                     <div id="profileAddresses" className="col-xs-12 container">
-                        <h2 id="profileAddressesHeader" className="col-xs-12">
+                        <h2 id="profileAddressesHeader" className="col-xs-12 profileSectionHeader">
                             Your addresses
                         </h2>
-                        <div id="profileAddressesList" className="col-xs-12 container">
+                        <div id="profileAddressesList" className="col-xs-12 container profileSectionList">
                             {addresses}
+                        </div>
+                    </div>
+                    <div id="profileOrders" className="col-xs-12 container">
+                        <h2 id="profileOrdersHeader" className="col-xs-12 profileSectionHeader">
+                            Orders
+                        </h2>
+                        <div id="profileOrdersList" className="col-xs-12 container profileSectionList">
+                            {orders}
                         </div>
                     </div>
                 </div>
