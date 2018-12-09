@@ -49,7 +49,7 @@
   },
   "scripts": 
   {
-    "build": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode development --open",
     "prod_build": "webpack --mode production"
   }
 }
