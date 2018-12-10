@@ -1,0 +1,36 @@
+﻿#searchBar 
+{
+    padding: 0;
+    margin: 15px 0;
+}
+#searchBarButton 
+{
+    display: block;
+    border-radius: 5px 0 0 5px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    margin: 0;
+    background: #FF9700;
+}
+#searchBarButton .material-icons 
+{
+    color: #efefef;
+}
+#searchBarInput 
+{
+    border-radius: 0 5px 5px 0;
+    border-left: none;
+    float: left;
+    width: 80%;
+    font-size: 13px;
+}
+@media (max-width: 992px) 
+{
+    #searchBarInput 
+    {
+        width:  calc(100% - 46px);
+    }
+}

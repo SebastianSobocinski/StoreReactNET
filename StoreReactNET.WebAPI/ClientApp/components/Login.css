@@ -1,0 +1,38 @@
+﻿#loginContainer 
+{
+    float: none;
+    margin: 0 auto;
+}
+
+#loginContainer > h2 
+{
+    text-align: center;
+}
+
+#loginForm
+{
+    margin: 0 auto;
+}
+
+#loginContainer input 
+{
+    display: block;
+    margin-top: 20px;
+}
+
+#loginContainer button
+{
+    display: block;
+    margin: 0 auto;
+}
+#passwordLogin 
+{
+    margin-bottom: 20px;
+}
+@media (min-width: 767px) 
+{
+    #loginForm 
+    {
+        width: 60%;
+    }
+}

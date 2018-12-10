@@ -1,0 +1,53 @@
+﻿#clickedProductContainer
+{
+    margin-top: 25px;
+    padding:0;
+}
+#clickedProductBar
+{
+    padding:5px 0;
+    border-bottom:1px solid #efefef;
+}
+#clickedProductBar a 
+{
+    color:inherit;
+}
+#clickedProductBar a:hover
+{
+    text-decoration: underline;
+}
+#clickedProductTop
+{
+    padding: 0;
+    margin-top: 10px;
+}
+#clickedProductTop > .productDiv 
+{
+    padding: 10px 0;
+}
+#clickedProductBottom
+{
+    padding:10px 0 0 0;
+    border-bottom: 1px solid #efefef;
+}
+
+.details-item
+{
+    padding:0;
+}
+.details-item-header 
+{
+    background-color: #efefef;
+    padding: 0 5px;
+    line-height: 35px;
+    height: 35px;
+    font-weight: bold;
+}
+.details-item-content 
+{
+    padding: 0 10px;
+    line-height: 35px;
+    height: 35px;
+
+}
+
