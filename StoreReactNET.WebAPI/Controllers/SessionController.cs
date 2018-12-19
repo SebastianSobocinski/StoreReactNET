@@ -11,7 +11,7 @@ namespace StoreReactNET.WebAPI.Controllers
     [Route("Session/[action]")]
     public class SessionController : Controller
     {
-        /*
+       
         [HttpGet]
         public ActionResult GetUserSession()
         {
@@ -20,8 +20,8 @@ namespace StoreReactNET.WebAPI.Controllers
                 isEstablished = false,
                 user = ""
             };
-            var session = HttpContext.Session.GetString("user");
 
+            var session = HttpContext.Session.GetString("user");
             if(session != null)
             {
                 respond = new
@@ -30,9 +30,9 @@ namespace StoreReactNET.WebAPI.Controllers
                     user = session
                 };
             }
-
             return Json(respond);
         }
+        /*
         [HttpGet]
         public ActionResult GetCartSession()
         {

@@ -7,3 +7,6 @@ C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\
 C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.1\StoreReactNET.Infrastructure.AssemblyInfo.cs
 C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.1\StoreReactNET.Infrastructure.dll
 C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.1\StoreReactNET.Infrastructure.pdb
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\bin\Debug\netcoreapp2.1\StoreReactNET.Services.dll
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\bin\Debug\netcoreapp2.1\StoreReactNET.Services.pdb
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.1\StoreReactNET.Infrastructure.csproj.CopyComplete

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace StoreReactNET.WebAPI.Services
+namespace StoreReactNET.Services
 {
     public class SHA256Service
     {

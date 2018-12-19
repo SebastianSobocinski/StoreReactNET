@@ -29,7 +29,7 @@ namespace StoreReactNET.Infrastructure.EntityFramework
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=den1.mssql2.gear.host;Initial Catalog=storeasp;Persist Security Info=True;User ID=storeasp;Password=Es4T7D09a~z_");
+                optionsBuilder.UseSqlServer("Data Source=den1.mssql2.gear.host;Initial Catalog=storeasp;Persist Security Info=True;User ID=storeasp;Password=x(Xc6Qm_>8zE");
             }
         }
 

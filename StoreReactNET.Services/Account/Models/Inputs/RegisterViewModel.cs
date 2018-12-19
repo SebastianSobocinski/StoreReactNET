@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StoreReactNET.WebAPI.Models.ViewModels
+namespace StoreReactNET.Services.Account.Models.Inputs
 {
     public class RegisterViewModel
     {

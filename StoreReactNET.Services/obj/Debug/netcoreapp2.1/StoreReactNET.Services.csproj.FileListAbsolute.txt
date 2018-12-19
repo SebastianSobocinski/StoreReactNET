@@ -1,0 +1,9 @@
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\bin\Debug\netcoreapp2.1\StoreReactNET.Services.deps.json
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\bin\Debug\netcoreapp2.1\StoreReactNET.Services.dll
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\bin\Debug\netcoreapp2.1\StoreReactNET.Services.pdb
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\obj\Debug\netcoreapp2.1\StoreReactNET.Services.csprojAssemblyReference.cache
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\obj\Debug\netcoreapp2.1\StoreReactNET.Services.csproj.CoreCompileInputs.cache
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\obj\Debug\netcoreapp2.1\StoreReactNET.Services.AssemblyInfoInputs.cache
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\obj\Debug\netcoreapp2.1\StoreReactNET.Services.AssemblyInfo.cs
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\obj\Debug\netcoreapp2.1\StoreReactNET.Services.dll
+C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Services\obj\Debug\netcoreapp2.1\StoreReactNET.Services.pdb

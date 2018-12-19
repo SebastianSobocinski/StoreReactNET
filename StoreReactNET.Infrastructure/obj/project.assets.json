@@ -906,6 +906,16 @@
         "compile": {
           "ref/netstandard1.3/System.Threading.Tasks.dll": {}
         }
+      },
+      "StoreReactNET.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.1",
+        "compile": {
+          "bin/placeholder/StoreReactNET.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/StoreReactNET.Services.dll": {}
+        }
       }
     }
   },
@@ -3398,13 +3408,19 @@
         "system.threading.tasks.4.0.11.nupkg.sha512",
         "system.threading.tasks.nuspec"
       ]
+    },
+    "StoreReactNET.Services/1.0.0": {
+      "type": "project",
+      "path": "../StoreReactNET.Services/StoreReactNET.Services.csproj",
+      "msbuildProject": "../StoreReactNET.Services/StoreReactNET.Services.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "Microsoft.EntityFrameworkCore >= 2.2.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 2.2.0",
-      "Microsoft.NETCore.App >= 2.1.0"
+      "Microsoft.NETCore.App >= 2.1.0",
+      "StoreReactNET.Services >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -3436,7 +3452,11 @@
       },
       "frameworks": {
         "netcoreapp2.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\sebas\\Desktop\\www\\StoreReactNET\\StoreReactNET.Services\\StoreReactNET.Services.csproj": {
+              "projectPath": "C:\\Users\\sebas\\Desktop\\www\\StoreReactNET\\StoreReactNET.Services\\StoreReactNET.Services.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

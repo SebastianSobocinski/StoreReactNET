@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using StoreReactNET.Services.Account;
+using StoreReactNET.Services.Account.Models.Inputs;
+using StoreReactNET.Services.Account.Models.Outputs;
 using StoreReactNET.WebAPI.Models.ViewModels;
-using StoreReactNET.WebAPI.Services;
+
 
 namespace StoreReactNET.WebAPI.Controllers
 {
     [Route("Account/[action]")]
     public class AccountController : Controller
     {
-       /* [HttpPost]
-        public ActionResult Login(string Email, string Password)
+        private readonly IAccountService _accountService;
+        public AccountController(IAccountService accountService)
         {
-            var db = new StoreASPContext();
-            var result = db.Users
-                           .Where(c => c.Email == Email && c.Password == SHA256Service.GetHashedString(Password))
-                           .Include(c => c.UserDetails)
-                           .FirstOrDefault();
-
+            this._accountService = accountService;
+        }
+        [HttpPost]
+        public async Task<ActionResult> Login(string Email, string Password)
+        {
+            var result = await _accountService.Login(Email, Password);
             if (result != null)
             {
-                var userVM = new UserViewModel(result);
-                var userString = JsonConvert.SerializeObject(userVM);
-                var cartVM = new List<CartItemViewModel>();
-                var cartString = JsonConvert.SerializeObject(cartVM);
+                var userString = JsonConvert.SerializeObject(result);
+                var cartString = JsonConvert.SerializeObject(new List<CartItemViewModel>());
 
                 HttpContext.Session.SetString("user", userString);
                 HttpContext.Session.SetString("cart", cartString);
+
                 return Redirect("/");
             }
             else
@@ -45,81 +45,54 @@ namespace StoreReactNET.WebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var db = new StoreASPContext();
-
-                var result = db.Users
-                               .Where(c => c.Email == collection.Email)
-                               .FirstOrDefault();
-
-                if(result == null)
+                try
                 {
-                    var entry = new Users
-                    {
-                        Email = collection.Email,
-                        Password = SHA256Service.GetHashedString(collection.Password)
-                    };
-
-                    await db.Users.AddAsync(entry);
-                    await db.SaveChangesAsync();
-
+                    await _accountService.Register(collection.Email, collection.Password);
                     return Redirect("/");
                 }
-                else
+                catch (Exception)
                 {
                     return Redirect("/Account/Register/?failCode=0");
                 }
-                
             }
             else
             {
-                if(collection.Password != collection.RePassword)
-                {
-                    return Redirect("/Account/Register/?failCode=1");
-                }
-                else
-                {
-                    return Redirect("/Account/Register/?failCode=2");
-                }
+                return Redirect(collection.Password != collection.RePassword ? 
+                    "/Account/Register/?failCode=1" : "/Account/Register/?failCode=2");
             }
 
         }
         [HttpGet]
-        public ActionResult GetUserDetails()
+        public async Task<ActionResult> GetUserDetails()
         {
             var respond = new
             {
                 success = false,
-                userDetails = new UserDetailsViewModel(null)
+                userDetails = new UserDetailsDTO()
             };
 
             var session = HttpContext.Session.GetString("user");
             if(session != null)
             {
-                var user = JsonConvert.DeserializeObject<UserViewModel>(session);
-                if (user != null)
+                try
                 {
-                    var db = new StoreASPContext();
-                    var result = db.Users
-                                   .Include(c => c.UserDetails)
-                                   .Where(c => user.ID == c.Id.ToString())
-                                   .FirstOrDefault();
+                    var details = await _accountService.GetUserDetails(
+                        JsonConvert.DeserializeObject<UserViewModel>(session).ID
+                    );
 
-                    if (result != null)
+                    respond = new
                     {
-                        if (result.UserDetailsId != null)
-                        {
-                            respond = new
-                            {
-                                success = true,
-                                userDetails = new UserDetailsViewModel(result.UserDetails)
-                            };
-                        }
-                    }
+                        success = true,
+                        userDetails = details
+                    };
                 }
+                catch (Exception) { }
+
             }
             
             return Json(respond);
         }
+        /*
         [HttpGet]
         public ActionResult GetUserAddresses()
         {

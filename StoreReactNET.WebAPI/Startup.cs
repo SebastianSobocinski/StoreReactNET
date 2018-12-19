@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StoreReactNET.Infrastructure.EntityFramework;
+using StoreReactNET.Infrastructure.EntityFramework.Repositories;
+using StoreReactNET.Services.Account;
 
 namespace StoreReactNET.WebAPI
 {
@@ -18,6 +21,15 @@ namespace StoreReactNET.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services
+            services.AddTransient<IAccountService, AccountService>();
+
+            //repos
+            services.AddTransient<IAccountRepository, AccountRepository>();
+
+            //db context
+            services.AddDbContext<StoreASPContext>();
+
             services.AddMvc();
             services.AddDistributedMemoryCache();
             services.AddSession();
