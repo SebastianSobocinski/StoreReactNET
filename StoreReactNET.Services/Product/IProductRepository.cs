@@ -9,6 +9,7 @@ namespace StoreReactNET.Services.Product
 {
     public interface IProductRepository
     {
+        Task<ProductDTO> GetProduct(int ProductID);
         Task<List<ProductDTO>> GetProductsByCategoryWithFilters(int categoryId, List<JSONProductFilter> filters);
         Task<ClickedProductDTO> GetClickedProduct(int productId);
         Task<List<ProductDTO>> GetSearchedProducts(List<string> QueryArray);

@@ -27,6 +27,7 @@ export class Cart extends React.Component
     {
         return this.state.cart.map((obj) =>
         {
+
             return <CartItem key={obj.productID} data={obj} setQuantity={this.setQuantity} />
 
         })

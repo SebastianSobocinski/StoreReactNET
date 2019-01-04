@@ -43,7 +43,7 @@ export class App extends React.Component
         {
             currentState.user = value;
         });
-        let p2 = AjaxQuery.getCartSession().then((value) =>
+        let p2 = AjaxQuery.getCartSession().then((value) => 
         {
             currentState.cart = value;
         });

@@ -15,7 +15,7 @@ export class AjaxQuery
                     {
                         if (respond.isEstablished)
                         {
-                            result = JSON.parse(respond.user);
+                            result = respond.user;
                         }
                         resolve(result);
                     }
@@ -36,7 +36,7 @@ export class AjaxQuery
                     {
                         if (respond.isEstablished)
                         {
-                            result = JSON.parse(respond.cart);
+                            result = respond.cart;
                         }
                         else 
                         {
@@ -64,7 +64,7 @@ export class AjaxQuery
                     {
                         if (respond.success)
                         {
-                            result = JSON.parse(respond.cart)
+                            result = respond.cart
                         }
                         alert(respond.message)
 

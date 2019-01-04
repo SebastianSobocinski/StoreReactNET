@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using StoreReactNET.Services.Product.Models.Outputs;
+using StoreReactNET.Services.Session;
 using StoreReactNET.WebAPI.Models.ViewModels;
 
 namespace StoreReactNET.WebAPI.Controllers
@@ -11,7 +15,11 @@ namespace StoreReactNET.WebAPI.Controllers
     [Route("Session/[action]")]
     public class SessionController : Controller
     {
-       
+        private readonly ISessionService _sessionService;
+        public SessionController(ISessionService sessionService)
+        {
+            _sessionService = sessionService;
+        }
         [HttpGet]
         public ActionResult GetUserSession()
         {
@@ -32,14 +40,13 @@ namespace StoreReactNET.WebAPI.Controllers
             }
             return Json(respond);
         }
-        /*
         [HttpGet]
         public ActionResult GetCartSession()
         {
             var respond = new
             {
                 isEstablished = false,
-                cart = ""
+                cart = new List<CartProductDTO>()
             };
             var session = HttpContext.Session.GetString("cart");
 
@@ -48,21 +55,22 @@ namespace StoreReactNET.WebAPI.Controllers
                 respond = new
                 {
                     isEstablished = true,
-                    cart = session
+                    cart = JsonConvert.DeserializeObject<List<CartProductDTO>>(session)
                 };
             }
 
             return Json(respond);
         }
         [HttpPost]
-        public ActionResult AddToCartSession(int ProductID)
+        public async Task<ActionResult> AddToCartSession(int ProductID)
         {
             var respond = new
             {
                 success = false,
                 message = "Some kind of error occured.",
-                cart = ""
+                cart = new List<CartProductDTO>()
             };
+            //checks if logged in
             var UserSession = HttpContext.Session.GetString("user");
             if(UserSession == null)
             {
@@ -70,37 +78,42 @@ namespace StoreReactNET.WebAPI.Controllers
                 {
                     success = false,
                     message = "Please log in.",
-                    cart = ""
+                    cart = new List<CartProductDTO>()
                 };
             }
             else
             {
-                var CartSession = HttpContext.Session.GetString("cart");
-                var CartObject = JsonConvert.DeserializeObject<List<CartItemViewModel>>(CartSession);
+                //gets cart
+                var CartObject = JsonConvert.DeserializeObject<List<CartProductDTO>>(
+                    HttpContext.Session.GetString("cart")
+                    );
 
-                var db = new StoreASPContext();
-                var result = db.Products
-                               .Where(c => c.Id == ProductID)
-                               .Include(c => c.ProductCategory)
-                               .Include(c => c.ProductImages)
-                               .Include(c => c.ProductDetails)
-                               .FirstOrDefault();
-
-                if(result != null)
+                try
                 {
-                    var ItemInCart = CheckIfInCart(ProductID, CartObject);
-                    if (ItemInCart != null)
-                    {
-                        ItemInCart.Quantity++;
-                    }
+                    //tries to add to cart
+                    var item = await _sessionService.GetCartProduct(ProductID);
+                    var itemInCart = CheckIfInCart(ProductID, CartObject);
+
+                    //checks if already exists in cart if so adds quantity
+                    if (itemInCart != null)
+                        itemInCart.Quantity++;
                     else
                     {
-                        CartObject.Add(new CartItemViewModel(result)
+                        //else adds product to cart
+                        CartObject.Add(new CartProductDTO()
                         {
+                            ProductCategoryID = item.ProductCategoryID,
+                            ProductCategoryName = item.ProductCategoryName,
+                            ProductDescription = item.ProductDescription,
+                            ProductID = item.ProductID,
+                            ProductImages = item.ProductImages,
+                            ProductName = item.ProductName,
+                            ProductPrice = item.ProductPrice,
                             Quantity = 1
                         });
                     }
-                    
+
+                    //deserialize to string
                     var CartString = JsonConvert.SerializeObject(CartObject);
                     HttpContext.Session.SetString("cart", CartString);
 
@@ -108,25 +121,25 @@ namespace StoreReactNET.WebAPI.Controllers
                     {
                         success = true,
                         message = "Success",
-                        cart = CartString
+                        cart = CartObject
                     };
+
                 }
+                catch(Exception) { }
                
             }
-            
-
             return Json(respond);
         }
         [HttpPost]
         public ActionResult UpdateCartSession(string Cart)
         {
-            var sentCart = JsonConvert.DeserializeObject<List<CartItemViewModel>>(Cart);
+            var sentCart = JsonConvert.DeserializeObject<List<CartProductDTO>>(Cart);
 
             var respond = new
             {
                 success = false,
                 message = "Something went wrong.",
-                cart = new List<CartItemViewModel>()
+                cart = new List<CartProductDTO>()
             };
             if(HttpContext.Session.GetString("user") == null)
             {
@@ -134,7 +147,7 @@ namespace StoreReactNET.WebAPI.Controllers
                 {
                     success = false,
                     message = "Please log in!",
-                    cart = new List<CartItemViewModel>()
+                    cart = new List<CartProductDTO>()
                 };
             }
             else
@@ -156,8 +169,6 @@ namespace StoreReactNET.WebAPI.Controllers
                 };
             }
             
-
-
             return Json(respond);
         }
         [HttpPost]
@@ -177,11 +188,7 @@ namespace StoreReactNET.WebAPI.Controllers
             };
             return Json(respond);
         }
-
-
-
-
-        protected CartItemViewModel CheckIfInCart(int ProductID, List<CartItemViewModel> List)
+        private CartProductDTO CheckIfInCart(int ProductID, List<CartProductDTO> List)
         {
             foreach(var Item in List)
             {
@@ -192,6 +199,5 @@ namespace StoreReactNET.WebAPI.Controllers
             }
             return null;
         }
-        */
     }
 }

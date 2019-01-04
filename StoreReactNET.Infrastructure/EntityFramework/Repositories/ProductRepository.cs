@@ -21,6 +21,30 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
             this._context = context;
         }
 
+        public async Task<ProductDTO> GetProduct(int ProductID)
+        {
+            var product = await _context.Products
+                .Where(c => c.Id == ProductID)
+                .Include(c => c.ProductCategory)
+                .Include(c => c.ProductImages)
+                .Include(c => c.ProductDetails)
+                .FirstOrDefaultAsync();
+
+            return new ProductDTO()
+            {
+                ProductCategoryID = product.ProductCategoryId.ToString(),
+                ProductCategoryName = product.ProductCategory.CategoryName,
+                ProductDescription = product.Description,
+                ProductID = product.Id.ToString(),
+                ProductImages = product.ProductImages
+                    .Select(image => image.ImageName)
+                    .ToList(),
+                ProductName = product.Name,
+                ProductPrice = product.PriceVat
+            };
+
+        }
+
         public async Task<List<ProductDTO>> GetProductsByCategoryWithFilters(int categoryId, List<JSONProductFilter> filters)
         {
             //gets all products from category

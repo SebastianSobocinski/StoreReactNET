@@ -7,6 +7,7 @@ export class CartItem extends React.Component
     constructor(props)
     {
         super(props);
+        console.log(this.props)
         this.state =
         {
             productID: this.props.data.productID,
@@ -34,6 +35,7 @@ export class CartItem extends React.Component
     }
     renderImage()
     {
+
         let imageSrc;
         if (this.state.productImages.length > 0)
         {
@@ -72,8 +74,7 @@ export class CartItem extends React.Component
             return <img className="col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-0 col-md-2 cartItemImage" src={imageSrc} />
         }
     }
-    render()
-    {
+    render() {
         return (
             <div className="cartItem col-xs-12 container">
                 {this.renderImage()}
