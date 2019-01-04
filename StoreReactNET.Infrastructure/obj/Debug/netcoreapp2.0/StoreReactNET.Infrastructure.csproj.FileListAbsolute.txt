@@ -1,9 +1,0 @@
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\bin\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.deps.json
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\bin\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.dll
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\bin\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.pdb
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.csproj.CoreCompileInputs.cache
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.AssemblyInfoInputs.cache
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.AssemblyInfo.cs
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.dll
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.pdb
-C:\Users\sebas\Desktop\www\StoreReactNET\StoreReactNET.Infrastructure\obj\Debug\netcoreapp2.0\StoreReactNET.Infrastructure.csprojAssemblyReference.cache
