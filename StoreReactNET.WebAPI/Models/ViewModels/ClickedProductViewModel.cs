@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using StoreReactNET.Services;
 
 namespace StoreReactNET.WebAPI.Models.ViewModels
 {

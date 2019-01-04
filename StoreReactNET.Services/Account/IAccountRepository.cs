@@ -14,5 +14,7 @@ namespace StoreReactNET.Services.Account
         Task<UserDTO> GetUserByIDAsync(string userID);
         Task RegisterUserAsync(string Email, string HashedPassword);
         Task<UserDetailsDTO> GetUserDetailsAsync(string userID);
+        Task<List<UserAddressDTO>> GetUserAddressesAsync(string userID);
+        Task<List<OrderDTO>> GetUserOrders(string userID);
     }
 }

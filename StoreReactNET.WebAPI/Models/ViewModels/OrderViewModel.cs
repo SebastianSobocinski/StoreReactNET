@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using StoreReactNET.Infrastructure.EntityFramework;
 using StoreReactNET.Infrastructure.EntityFramework.Entities;
+using StoreReactNET.Services;
 
 namespace StoreReactNET.WebAPI.Models.ViewModels
 {

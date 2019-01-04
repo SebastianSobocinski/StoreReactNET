@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace StoreReactNET.WebAPI.Models
+namespace StoreReactNET.Services.Product.Models.Inputs
 {
     public class JSONCategoryFilters
     {

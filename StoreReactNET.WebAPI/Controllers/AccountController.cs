@@ -92,83 +92,65 @@ namespace StoreReactNET.WebAPI.Controllers
             
             return Json(respond);
         }
-        /*
         [HttpGet]
-        public ActionResult GetUserAddresses()
+        public async Task<ActionResult> GetUserAddresses()
         {
             var respond = new
             {
                 success = false,
-                userAddresses = new List<UserAdresses>()
+                userAddresses = new List<UserAddressDTO>()
             };
 
             var session = HttpContext.Session.GetString("user");
             if(session != null)
             {
-                var user = JsonConvert.DeserializeObject<UserViewModel>(session);
-                if (user != null)
+                try
                 {
-                    var db = new StoreASPContext();
-                    var result = db.UserAdresses
-                                   .Where(c => user.ID == c.UserId.ToString())
-                                   .ToList();
-
-                    if (result != null)
+                    var addressess = await _accountService.GetUserAddresses(
+                        JsonConvert.DeserializeObject<UserViewModel>(session).ID
+                    );
+                    respond = new
                     {
-                        respond = new
-                        {
-                            success = true,
-                            userAddresses = result
-                        };
-                    }
+                        success = true,
+                        userAddresses = addressess
+                    };
                 }
+                catch(Exception) { }
             }
             
             return Json(respond);
         }
+        
         [HttpGet]
-        public ActionResult GetUserLatestOrders()
+        public async Task<ActionResult> GetUserLatestOrders()
         {
             var respond = new
             {
                 success = false,
-                userOrders = new List<OrderViewModel>()
+                userOrders = new List<OrderDTO>()
             };
 
             var session = HttpContext.Session.GetString("user");
             if(session != null)
             {
-                var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
-
-                var db = new StoreASPContext();
-
-                var result = db.Orders
-                               .Where(c => uservm.ID == c.UserId.ToString())
-                               .OrderByDescending(c => c.Id)
-                               .Take(10)
-                               .ToList();
-
-
-                if(result.Count > 0)
+                try
                 {
-                    var ordersList = new List<OrderViewModel>();
-
-                    foreach(var item in result)
-                    {
-                        ordersList.Add(new OrderViewModel(item));
-                    }
-
+                    var orders = await _accountService.GetUserLatestOrders(
+                        JsonConvert.DeserializeObject<UserViewModel>(session).ID
+                        );
                     respond = new
                     {
                         success = true,
-                        userOrders = ordersList
+                        userOrders = orders
                     };
                 }
+                catch (Exception) { }
             }
 
 
             return Json(respond);
         }
+        /*
         [HttpPost]
         public async Task<ActionResult> SetDetails([FromForm]UserDetailsViewModel collection)
         {

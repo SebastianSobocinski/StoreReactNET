@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StoreReactNET.WebAPI.Models
+namespace StoreReactNET.Services
 {
     public sealed class Singleton
     {

@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StoreReactNET.Infrastructure\StoreReactNET.Infrastructure.csproj" />
+    <ProjectReference Include="..\StoreReactNET.Services\StoreReactNET.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

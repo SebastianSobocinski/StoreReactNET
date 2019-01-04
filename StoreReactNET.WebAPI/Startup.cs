@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using StoreReactNET.Infrastructure.EntityFramework;
 using StoreReactNET.Infrastructure.EntityFramework.Repositories;
 using StoreReactNET.Services.Account;
+using StoreReactNET.Services.Product;
 
 namespace StoreReactNET.WebAPI
 {
@@ -23,9 +24,11 @@ namespace StoreReactNET.WebAPI
         {
             //services
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IProductService, ProductService>();
 
             //repos
             services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
 
             //db context
             services.AddDbContext<StoreASPContext>();

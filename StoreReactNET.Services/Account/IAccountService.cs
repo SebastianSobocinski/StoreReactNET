@@ -12,5 +12,7 @@ namespace StoreReactNET.Services.Account
         Task<UserDTO> Login(string Email, string Password);
         Task Register(string Email, string Password);
         Task<UserDetailsDTO> GetUserDetails(string userID);
+        Task<List<UserAddressDTO>> GetUserAddresses(string userID);
+        Task<List<OrderDTO>> GetUserLatestOrders(string userID);
     }
 }

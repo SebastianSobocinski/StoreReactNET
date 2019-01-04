@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using StoreReactNET.Services.Account.Exceptions;
 using StoreReactNET.Services.Account.Models;
 using StoreReactNET.Services.Account.Models.Outputs;
 
@@ -27,7 +26,7 @@ namespace StoreReactNET.Services.Account
             var existingUser = await _repository.GetUserByEmailAsync(Email);
 
             if (existingUser != null)
-                throw new UserExistsException("User already exists.");
+                throw new Exception("User already exists.");
             else
                 await _repository.RegisterUserAsync(Email, SHA256Service.GetHashedString(Password));
 
@@ -41,6 +40,26 @@ namespace StoreReactNET.Services.Account
                 throw new Exception("Can't find user details");
             else
                 return details;
+        }
+
+        public async Task<List<UserAddressDTO>> GetUserAddresses(string userID)
+        {
+            var addresses = await _repository.GetUserAddressesAsync(userID);
+
+            if (addresses.Count == 0)
+                throw new Exception("Couldn't find any addresses");
+            else
+                return addresses;
+        }
+
+        public async Task<List<OrderDTO>> GetUserLatestOrders(string userID)
+        {
+            var orders = await _repository.GetUserOrders(userID);
+
+            if (orders.Count == 0)
+                throw new Exception("Couldn't find any orders");
+            else
+                return orders;
         }
     }
 }

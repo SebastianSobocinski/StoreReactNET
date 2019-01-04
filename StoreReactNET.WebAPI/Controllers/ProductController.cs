@@ -1,326 +1,127 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using StoreReactNET.WebAPI.Models;
-using StoreReactNET.WebAPI.Models.ViewModels;
+using StoreReactNET.Services.Product;
+using StoreReactNET.Services.Product.Models.Inputs;
+using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.WebAPI.Controllers
 {
     [Route("Product/[action]")]
-    public class ProductController : Controller
+    public sealed class ProductController : Controller
     {
-       /* [HttpGet]
-        public ActionResult GetProducts(int CategoryID, int Page, string Filters, string OrderBy)
+        private readonly IProductService _productService;
+        public ProductController(IProductService productService)
         {
-            var respond = new
+            this._productService = productService;
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetProducts(int CategoryID, int Page, string Filters, string OrderBy)
+        {
+             var respond = new
+             {
+                 success = false,
+                 products = new List<ProductDTO>()
+             };
+
+
+            try
             {
-                success = false,
-                products = new List<ProductViewModel>()
-            };
-            var db = new StoreASPContext();
-
-            var result = db.Products
-                           .Where(c => c.ProductCategoryId == CategoryID)
-                           .Include(c => c.ProductCategory)
-                           .Include(c => c.ProductImages)
-                           .Include(c => c.ProductDetails)
-                           .ToList();
-
-            if(result.Count > 0)
-            {
-                var selectedFilters = JsonConvert.DeserializeObject<List<JSONProductFilter>>(Filters);
-                if(selectedFilters != null)
-                {
-                    foreach (var filter in selectedFilters)
-                    {
-                        if(filter.Value.Count > 0)
-                        {
-                            if (filter.Type == "maxPrice")
-                            {
-                                try
-                                {
-                                    double maxPrice = double.Parse(filter.Value[0], CultureInfo.InvariantCulture);
-                                    result = result
-                                         .Where(c => (c.PriceVat * 1.23) <= maxPrice)
-                                         .ToList();
-                                }
-                                catch (Exception) { }
-
-                            }
-                            else
-                            {
-                                result = result
-                                         .Where(c => c.ProductDetailsId != null && c.ProductDetails.Count > 0)
-                                         .Where(c => (
-                                                      filter.Value.Contains
-                                                      (c.ProductDetailsNavigation
-                                                      .GetType()
-                                                      .GetProperty(filter.Type)
-                                                      .GetValue(c.ProductDetailsNavigation, null)
-                                                      .ToString()
-                                                      ))   
-                                                )
-                                         .ToList();
-                            }
-                        }
-                        
-                    }
-                }
-
-                switch (OrderBy)
-                {
-                    case "relevance":
-                        result = result.OrderBy(c => c.Id).ToList();
-                        break;
-                    case "toLower":
-                        result = result.OrderByDescending(c => c.PriceVat).ToList();
-                        break;
-                    case "toHigher":
-                        result = result.OrderBy(c => c.PriceVat).ToList();
-                        break;
-                    default:
-                        break; 
-                }
-
-                result = result
-                         .Take(Page * 10)
-                         .ToList();
-               
-                
-                var ItemsByPage = new List<ProductViewModel>();
-                for(int i = (Page - 1) * 10; i < (Page * 10); i++)
-                {
-                    try
-                    {
-                        ItemsByPage.Add(new ProductViewModel(result[i]));
-                    }
-                    catch(Exception) { }
-                }
+                var filters = new List<JSONProductFilter>();
+                if (Filters != "null")
+                    filters = JsonConvert.DeserializeObject<List<JSONProductFilter>>(Filters);
+                    
+                var result = await _productService.GetProducts(CategoryID, Page, filters, OrderBy);
                 respond = new
                 {
                     success = true,
-                    products = ItemsByPage
+                    products = result
                 };
             }
-            
+            catch(Exception) { }
+
+             
             return Json(respond);
-        }
+         }
         [HttpGet]
-        public ActionResult GetClickedProduct(int ProductID)
+        public async Task<ActionResult> GetClickedProduct(int ProductID)
         {
-            var db = new StoreASPContext();
 
-            var result = db.Products
-                           .Where(c => c.Id == ProductID)
-                           .Include(c => c.ProductCategory)
-                           .Include(c => c.ProductImages)
-                           .Include(c => c.ProductDetails)
-                           .FirstOrDefault();
-
-            if(result != null)
+            var respond = new
             {
-                var respond = new
+                success = false,
+                product = new ClickedProductDTO()
+            };
+            try
+            {
+                var result = await _productService.GetClickedProduct(ProductID);
+
+                respond = new
                 {
                     success = true,
-                    product = new ClickedProductViewModel(result)
+                    product = result
                 };
-                return Json(respond);
             }
-            else
-            {
-                var respond = new
-                {
-                    success = false,
-                    product = ""
-                };
-                return Json(respond);
-            }
-        }
+            catch (Exception) { }
+            
+
+
+
+            return Json(respond);
+             
+         }
         [HttpGet]
-        public ActionResult GetSearchedProducts(string Query, int Page, string OrderBy)
+        public async Task<ActionResult> GetSearchedProducts(string Query, int Page, string OrderBy)
         {
             var respond = new
             {
                 success = false,
-                products = new List<ProductViewModel>()
+                products = new List<ProductDTO>()
             };
             if (Query != null)
             {
                 var QueryArray = JsonConvert.DeserializeObject<List<string>>(Query);
-                
-                if(QueryArray.Count > 0)
+                try
                 {
-                    QueryArray = QueryArray.Select(c => c.ToLowerInvariant()).ToList();
-                    var db = new StoreASPContext();
-                    var result = db.Products
-                                   .Include(c => c.ProductCategory)
-                                   .Include(c => c.ProductImages)
-                                   .Include(c => c.ProductDetails)
-                                   .Where(c =>
-                                        QueryArray.Any(el => c.Name.Replace(" ", "")
-                                                                   .ToLowerInvariant()
-                                                                   .Contains(el)
-                                                                   )
-                                        ||
-                                        QueryArray.Any(el => c.ProductCategory
-                                                                  .CategoryName
-                                                                  .Replace(" ", "")
-                                                                  .ToLowerInvariant()
-                                                                  .Contains(el)
-                                                                  )
-                                        )
-                                   .ToList();
+                    var result = await _productService.GetSearchedProducts(QueryArray, Page, OrderBy);
 
-                    if (result.Count > 0)
+                    respond = new
                     {
-                        switch (OrderBy)
-                        {
-                            case "relevance":
-                                result.Sort(delegate (Products p1, Products p2)
-                                {
-                                    int p1Completed = 0;
-                                    int p2Completed = 0;
-                                    foreach (var condition in QueryArray)
-                                    {
-                                        if (p1.Name.Replace(" ", "").ToLowerInvariant().Contains(condition))
-                                        {
-                                            p1Completed++;
-                                        }
-                                        if (p1.ProductCategory.CategoryName.Replace(" ", "").ToLowerInvariant().Contains(condition))
-                                        {
-                                            p1Completed++;
-                                        }
-                                        if (p2.Name.Replace(" ", "").ToLowerInvariant().Contains(condition))
-                                        {
-                                            p2Completed++;
-                                        }
-                                        if (p2.ProductCategory.CategoryName.Replace(" ", "").ToLowerInvariant().Contains(condition))
-                                        {
-                                            p2Completed++;
-                                        }
-
-                                    }
-                                    if (p1Completed > p2Completed)
-                                    {
-                                        return -1;
-                                    }
-                                    else if (p2Completed > p1Completed)
-                                    {
-                                        return 1;
-                                    }
-                                    else
-                                    {
-                                        return p1.Id.CompareTo(p2.Id);
-                                    }
-                                });
-                                break;
-                            case "toLower":
-                                result = result.OrderByDescending(c => c.PriceVat).ToList();
-                                break;
-                            case "toHigher":
-                                result = result.OrderBy(c => c.PriceVat).ToList();
-                                break;
-                            default:
-                                break;
-                        }
-
-
-
-                        var ItemsByPage = new List<ProductViewModel>();
-                        for (int i = (Page - 1) * 10; i < (Page * 10); i++)
-                        {
-                            try
-                            {
-                                ItemsByPage.Add(new ProductViewModel(result[i]));
-                            }
-                            catch (Exception) { }
-                        }
-                        respond = new
-                        {
-                            success = true,
-                            products = ItemsByPage
-                        };
-                    }
-
+                        success = true,
+                        products = result
+                    };
                 }
-
-
-
+                catch (Exception) { }
             }
-
-
+            
             return Json(respond);
+             
         }
         [HttpGet]
-        public ActionResult GetAllFiltersFromCategory(int CategoryID)
+        public async Task<ActionResult> GetAllFiltersFromCategory(int CategoryID)
         {
             var respond = new
             {
                 success = false,
                 filters = new List<JSONCategoryFilter>()
             };
-
-            var db = new StoreASPContext();
-            var result = db.Products
-                           .Include(c => c.ProductDetails)
-                           .Where(c => c.ProductCategoryId == CategoryID)
-                           .ToList<Products>();
-
-            if(result.Count > 0)
+            try
             {
-                try
+                var result = await _productService.GetAllFiltersFromCategory(CategoryID);
+                respond = new
                 {
-                    var filtersRequired = Singleton.FiltersRequired[CategoryID];
-
-                    var filtersHolder = new JSONCategoryFilters();
-                    foreach (var required in filtersRequired)
-                    {
-                        filtersHolder.Filters.Add(new JSONCategoryFilter(required));
-                    }
-
-                    foreach (var item in result)
-                    {
-                        if (item.ProductDetailsId != null && item.ProductDetails.Count > 0)
-                        {
-                            foreach (var required in filtersRequired)
-                            {
-                                var filter = filtersHolder.GetFilter(required);
-                                string value = null;
-                                try
-                                {
-                                    value = item.ProductDetailsNavigation
-                                        .GetType()
-                                        .GetProperty(required)
-                                        .GetValue(item.ProductDetailsNavigation, null)
-                                        .ToString();
-                                }
-                                catch (Exception) { }
-
-                                if (value != null)
-                                {
-                                    filter.Variables.Add(value);
-                                }
-                                
-                            }
-                        }
-                    }
-                    filtersHolder.DistinctFilters();
-                    respond = new
-                    {
-                        success = true,
-                        filters = filtersHolder.Filters
-                    };
-                }
-                catch (Exception) { }  
+                    success = true,
+                    filters = result
+                };
             }
+            catch (Exception) { }
+            
             return Json(respond);
         }
         [HttpGet]
-        public ActionResult GetAllCategories()
+        public async Task<ActionResult> GetAllCategories()
         {
             var respond = new
             {
@@ -328,9 +129,10 @@ namespace StoreReactNET.WebAPI.Controllers
                 categories = ""
             };
 
-            var db = new StoreASPContext();
-            var result = db.ProductCategories.ToList();
 
+            var result = await _productService.GetAllCategories();
+
+ 
             if(result.Count > 0)
             {
                 string resultString = JsonConvert.SerializeObject(result);
@@ -341,7 +143,7 @@ namespace StoreReactNET.WebAPI.Controllers
                 };
             }
             return Json(respond);
-        }
-        */
+         }
+         
     }
 }
