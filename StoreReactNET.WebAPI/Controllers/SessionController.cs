@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using StoreReactNET.Services.Product.Models.Outputs;
 using StoreReactNET.Services.Session;
-using StoreReactNET.WebAPI.Models.ViewModels;
 
 namespace StoreReactNET.WebAPI.Controllers
 {

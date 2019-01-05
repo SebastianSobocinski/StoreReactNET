@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using StoreReactNET.Services.Account;
 using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
-using StoreReactNET.WebAPI.Models.ViewModels;
+using StoreReactNET.Services.Product.Models.Outputs;
 
 
 namespace StoreReactNET.WebAPI.Controllers
@@ -27,7 +27,7 @@ namespace StoreReactNET.WebAPI.Controllers
             if (result != null)
             {
                 var userString = JsonConvert.SerializeObject(result);
-                var cartString = JsonConvert.SerializeObject(new List<CartItemViewModel>());
+                var cartString = JsonConvert.SerializeObject(new List<CartProductDTO>());
 
                 HttpContext.Session.SetString("user", userString);
                 HttpContext.Session.SetString("cart", cartString);
@@ -77,7 +77,7 @@ namespace StoreReactNET.WebAPI.Controllers
                 try
                 {
                     var details = await _accountService.GetUserDetails(
-                        JsonConvert.DeserializeObject<UserViewModel>(session).ID
+                        JsonConvert.DeserializeObject<UserDTO>(session).ID
                     );
 
                     respond = new
@@ -107,7 +107,7 @@ namespace StoreReactNET.WebAPI.Controllers
                 try
                 {
                     var addressess = await _accountService.GetUserAddresses(
-                        JsonConvert.DeserializeObject<UserViewModel>(session).ID
+                        JsonConvert.DeserializeObject<UserDTO>(session).ID
                     );
                     respond = new
                     {
@@ -119,8 +119,7 @@ namespace StoreReactNET.WebAPI.Controllers
             }
             
             return Json(respond);
-        }
-        
+        } 
         [HttpGet]
         public async Task<ActionResult> GetUserLatestOrders()
         {
@@ -136,7 +135,7 @@ namespace StoreReactNET.WebAPI.Controllers
                 try
                 {
                     var orders = await _accountService.GetUserLatestOrders(
-                        JsonConvert.DeserializeObject<UserViewModel>(session).ID
+                        JsonConvert.DeserializeObject<UserDTO>(session).ID
                         );
                     respond = new
                     {
@@ -159,10 +158,15 @@ namespace StoreReactNET.WebAPI.Controllers
                 var session = HttpContext.Session.GetString("user");
                 if(session != null)
                 {
-                    var db = new StoreASPContext();
+                    
                     var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
 
+                    try
+                    {
+                        var userDetails = await _accountService.GetUserDetails(uservm.ID);
 
+                    }
+                    catch(Exception) { }
                     var user = await db.Users
                                        .Include(c => c.UserDetails)
                                        .Where(c => uservm.ID == c.Id.ToString())
