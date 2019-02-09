@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using StoreReactNET.Services.Account.Models;
 using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
+using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Services.Account
 {
@@ -20,5 +21,6 @@ namespace StoreReactNET.Services.Account
         Task<bool> SetUserDetails(int userId, UserDetailsViewModel userDetailsViewModel);
         Task<bool> SetAddress(int userId, UserAddressDTO userAddress);
         Task<bool> RemoveUserAddress(int userId, int addressId);
+        Task<bool> SubmitOrder(int userId, List<CartProductDTO> cart, SentOrderViewModel sentOrder);
     }
 }

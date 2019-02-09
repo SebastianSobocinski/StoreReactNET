@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using StoreReactNET.Services.Account.Models;
 using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
+using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Services.Account
 {
@@ -85,6 +86,14 @@ namespace StoreReactNET.Services.Account
 
             if(!succeed)
                 throw new Exception("Couldn't remove user address!");
+        }
+
+        public async Task SubmitOrder(int userId, List<CartProductDTO> cart, SentOrderViewModel sentOrder)
+        {
+            var succeed = await _repository.SubmitOrder(userId, cart, sentOrder);
+
+            if(!succeed)
+                throw new Exception("Couldn't submit order!");
         }
     }
 }

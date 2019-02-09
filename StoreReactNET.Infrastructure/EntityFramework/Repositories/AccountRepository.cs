@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StoreReactNET.Services.Account;
@@ -11,6 +12,7 @@ using StoreReactNET.Services;
 using StoreReactNET.Services.Account.Models;
 using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
+using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 {
@@ -31,13 +33,14 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 
             if (result != null)
             {
-                return new UserDTO()
+                var respond = new UserDTO()
                 {
                     ID = result.Id.ToString(),
                     Email = result.Email,
-                    FirstName = result.UserDetails.Name,
-                    LastName = result.UserDetails.FullName
+                    FirstName = result.UserDetails?.Name ?? "",
+                    LastName = result.UserDetails?.FullName ?? ""
                 };
+                return respond;
             }
 
             return null;
@@ -292,6 +295,44 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
             result.UserId = null;
             await _context.SaveChangesAsync();
 
+            return true;
+        }
+
+        public async Task<bool> SubmitOrder(int userId, List<CartProductDTO> cart, SentOrderViewModel sentOrder)
+        {
+            var result = await _context.UserAdresses
+                .FirstOrDefaultAsync(
+                    c => 
+                        c.Id == sentOrder.AddressID
+                        &&
+                        c.UserId == userId
+                );
+
+            if (result == null || cart == null || cart.Count <= 0)
+                return false;
+
+            var orderEntry = new Orders()
+            {
+                UserId = userId,
+                UserAddressId = sentOrder.AddressID,
+                Date = DateTime.Now,
+                Status = 0
+            };
+            await _context.Orders.AddAsync(orderEntry);
+            await _context.SaveChangesAsync();
+
+            foreach (var item in cart)
+            {
+                var entryItem = new OrderItems()
+                {
+                    OrderId = orderEntry.Id,
+                    ProductId = int.Parse(item.ProductID),
+                    Quantity = item.Quantity
+                };
+                await _context.OrderItems.AddAsync(entryItem);
+            }
+
+            await _context.SaveChangesAsync();
             return true;
         }
     }
