@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using StoreReactNET.Services.Account.Models;
+using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
 
 namespace StoreReactNET.Services.Account
@@ -16,5 +17,8 @@ namespace StoreReactNET.Services.Account
         Task<UserDetailsDTO> GetUserDetailsAsync(string userID);
         Task<List<UserAddressDTO>> GetUserAddressesAsync(string userID);
         Task<List<OrderDTO>> GetUserOrders(string userID);
+        Task<bool> SetUserDetails(int userId, UserDetailsViewModel userDetailsViewModel);
+        Task<bool> SetAddress(int userId, UserAddressDTO userAddress);
+        Task<bool> RemoveUserAddress(int userId, int addressId);
     }
 }

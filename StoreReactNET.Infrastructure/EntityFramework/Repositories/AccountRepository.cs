@@ -9,6 +9,7 @@ using StoreReactNET.Services.Account;
 using StoreReactNET.Infrastructure.EntityFramework.Entities;
 using StoreReactNET.Services;
 using StoreReactNET.Services.Account.Models;
+using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
 
 namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
@@ -197,6 +198,101 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 
             return ordersDto;
 
+        }
+
+        public async Task<bool> SetUserDetails(int userId, UserDetailsViewModel userDetailsViewModel)
+        {
+            var user = await _context.Users
+                .Include(c => c.UserDetails)
+                .FirstOrDefaultAsync(c => c.Id == userId);
+
+            if (user == null)
+                return false;
+
+            if (user.UserDetailsId == null)
+            {
+                var entry = new UserDetails()
+                {
+                    Name = userDetailsViewModel.FirstName,
+                    FullName = userDetailsViewModel.LastName,
+                    DateOfBirth = userDetailsViewModel.DateOfBirth
+                };
+                await _context.UserDetails.AddAsync(entry);
+                await _context.SaveChangesAsync();
+                user.UserDetailsId = entry.Id;
+            }
+            else
+            {
+                user.UserDetails.Name = userDetailsViewModel.FirstName;
+                user.UserDetails.FullName = userDetailsViewModel.LastName;
+                user.UserDetails.DateOfBirth = userDetailsViewModel.DateOfBirth;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> SetAddress(int userId, UserAddressDTO userAddress)
+        {
+            if (userAddress.Id != null)
+            {
+                var result = await _context.UserAdresses
+                    .FirstOrDefaultAsync(
+                        c =>
+                            c.UserId == userId
+                            &&
+                            c.Id == userAddress.Id
+                    );
+                if (result != null)
+                {
+                    result.StreetName = userAddress.StreetName;
+                    result.HomeNr = userAddress.HomeNr;
+                    result.AppartmentNr = userAddress.AppartmentNr;
+                    result.Zipcode = userAddress.Zipcode;
+                    result.City = userAddress.City;
+                    result.Country = userAddress.Country;
+                }
+                else
+                    return false;
+            }
+            else
+            {
+                var entry = new UserAdresses()
+                {
+                    UserId = userId,
+                    StreetName = userAddress.StreetName,
+                    HomeNr = userAddress.HomeNr,
+                    AppartmentNr = userAddress.AppartmentNr,
+                    Zipcode = userAddress.Zipcode,
+                    City = userAddress.City,
+                    Country = userAddress.Country
+                };
+                await _context.UserAdresses.AddAsync(entry);
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RemoveUserAddress(int userId, int addressId)
+        {
+            var result = await _context.UserAdresses
+                .FirstOrDefaultAsync(
+                    c =>
+                        c.Id == addressId
+                        &&
+                        c.UserId == userId
+                );
+
+            if (result == null)
+                return false;
+
+            //sets user id null instead of delete entry
+            result.UserId = null;
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using StoreReactNET.Services.Account.Models;
+using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
 
 namespace StoreReactNET.Services.Account
@@ -60,6 +61,30 @@ namespace StoreReactNET.Services.Account
                 throw new Exception("Couldn't find any orders");
             else
                 return orders;
+        }
+
+        public async Task SetUserDetails(int userId, UserDetailsViewModel userDetailsViewModel)
+        {
+            var succeed = await _repository.SetUserDetails(userId, userDetailsViewModel);
+
+            if(!succeed)
+                throw new Exception("Couldn't set user details!");
+        }
+
+        public async Task SetAddress(int userId, UserAddressDTO userAddress)
+        {
+            var succeed = await _repository.SetAddress(userId, userAddress);
+
+            if(!succeed)
+                throw new Exception("Couldn't set user address!");
+        }
+
+        public async Task RemoveUserAddress(int userId, int addressId)
+        {
+            var succeed = await _repository.RemoveUserAddress(userId, addressId);
+
+            if(!succeed)
+                throw new Exception("Couldn't remove user address!");
         }
     }
 }
