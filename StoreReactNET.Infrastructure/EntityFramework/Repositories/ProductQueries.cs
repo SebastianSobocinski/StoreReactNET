@@ -13,10 +13,10 @@ using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductQueries : IProductQueries
     {
         private readonly StoreASPContext _context;
-        public ProductRepository(StoreASPContext context)
+        public ProductQueries(StoreASPContext context)
         {
             this._context = context;
         }

@@ -9,7 +9,7 @@ using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Services.Account
 {
-    public interface IAccountRepository
+    public interface IAccountQueries
     {
         Task<UserDTO> GetUserByCredentialsAsync(string Email, string HashedPassword);
         Task<UserDTO> GetUserByEmailAsync(string Email);

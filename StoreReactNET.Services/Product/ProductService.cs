@@ -11,14 +11,14 @@ namespace StoreReactNET.Services.Product
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _repository;
-        public ProductService(IProductRepository repository)
+        private readonly IProductQueries _queries;
+        public ProductService(IProductQueries queries)
         {
-            this._repository = repository;
+            this._queries = queries;
         }
         public async Task<List<ProductDTO>> GetProducts(int CategoryID, int Page, List<JSONProductFilter> Filters, string OrderBy)
         {
-            var products = await _repository.GetProductsByCategoryWithFilters(CategoryID, Filters);
+            var products = await _queries.GetProductsByCategoryWithFilters(CategoryID, Filters);
 
             //sorting
             switch (OrderBy)
@@ -45,7 +45,7 @@ namespace StoreReactNET.Services.Product
         }
         public async Task<ClickedProductDTO> GetClickedProduct(int ProductID)
         {
-            var product = await _repository.GetClickedProduct(ProductID);
+            var product = await _queries.GetClickedProduct(ProductID);
 
             if(product == null)
                 throw new Exception("Couldn't find product");
@@ -54,7 +54,7 @@ namespace StoreReactNET.Services.Product
         }
         public async Task<List<ProductDTO>> GetSearchedProducts(List<string> QueryArray, int Page, string OrderBy)
         {
-            var products = await _repository.GetSearchedProducts(QueryArray);
+            var products = await _queries.GetSearchedProducts(QueryArray);
 
             if (products == null)
                 throw new Exception("Couldn't find searched products");
@@ -130,7 +130,7 @@ namespace StoreReactNET.Services.Product
         }
         public async Task<List<JSONCategoryFilter>> GetAllFiltersFromCategory(int CategoryID)
         {
-            var filters = await _repository.GetAllFiltersFromCategory(CategoryID);
+            var filters = await _queries.GetAllFiltersFromCategory(CategoryID);
 
             if(filters == null)
                 throw new Exception("Couldn't find any filters");
@@ -139,7 +139,7 @@ namespace StoreReactNET.Services.Product
         }
         public async Task<List<CategoryDTO>> GetAllCategories()
         {
-            var categories = await _repository.GetAllCategories();
+            var categories = await _queries.GetAllCategories();
 
             if(categories == null)
                 throw new Exception("Couldn't find categories");

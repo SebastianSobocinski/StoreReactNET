@@ -29,8 +29,8 @@ namespace StoreReactNET.WebAPI
             services.AddTransient<ISessionService, SessionService>();
 
             //repos
-            services.AddTransient<IAccountRepository, AccountRepository>();
-            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IAccountQueries, AccountQueries>();
+            services.AddTransient<IProductQueries, ProductQueries>();
 
             //db context
             services.AddDbContext<StoreASPContext>();

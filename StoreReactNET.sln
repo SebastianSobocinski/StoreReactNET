@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreReactNET.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreReactNET.Services", "StoreReactNET.Services\StoreReactNET.Services.csproj", "{86EADAFA-B190-493E-8212-4B49C0EC7BB7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{86A58045-B4AB-417E-AF7C-F0659E52C195}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreReactNET.Infrastructure.Tests", "StoreReactNET.Infrastructure.Tests\StoreReactNET.Infrastructure.Tests.csproj", "{BCD663FC-D9DB-4974-AD1C-6705893C88BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{86EADAFA-B190-493E-8212-4B49C0EC7BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86EADAFA-B190-493E-8212-4B49C0EC7BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86EADAFA-B190-493E-8212-4B49C0EC7BB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCD663FC-D9DB-4974-AD1C-6705893C88BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD663FC-D9DB-4974-AD1C-6705893C88BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD663FC-D9DB-4974-AD1C-6705893C88BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD663FC-D9DB-4974-AD1C-6705893C88BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BCD663FC-D9DB-4974-AD1C-6705893C88BF} = {86A58045-B4AB-417E-AF7C-F0659E52C195}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BE58B86E-0460-4230-8F7C-FF96147FE9E8}

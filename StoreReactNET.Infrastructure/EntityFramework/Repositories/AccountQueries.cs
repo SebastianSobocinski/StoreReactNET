@@ -16,10 +16,10 @@ using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountQueries : IAccountQueries
     {
         private readonly StoreASPContext _context;
-        public AccountRepository(StoreASPContext context)
+        public AccountQueries(StoreASPContext context)
         {
             this._context = context;
         }
@@ -59,8 +59,8 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                 {
                     ID = result.Id.ToString(),
                     Email = result.Email,
-                    FirstName = result.UserDetails.Name,
-                    LastName = result.UserDetails.FullName
+                    FirstName = result.UserDetails?.Name ?? "",
+                    LastName = result.UserDetails?.FullName ?? ""
                 };
             }
 
@@ -80,8 +80,8 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                 {
                     ID = result.Id.ToString(),
                     Email = result.Email,
-                    FirstName = result.UserDetails.Name,
-                    LastName = result.UserDetails.FullName
+                    FirstName = result.UserDetails?.Name ?? "",
+                    LastName = result.UserDetails?.FullName ?? ""
                 };
             }
 
@@ -96,6 +96,10 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                 Password = HashedPassword
             };
 
+            var user = await _context.Users.FirstOrDefaultAsync(c => c.Email == Email);
+            if (user != null)
+                return;
+
             await _context.Users.AddAsync(entry);
             await _context.SaveChangesAsync();
         }
@@ -107,7 +111,7 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                     .Where(c => userID == c.Id.ToString())
                     .FirstOrDefaultAsync();
 
-            if (user.UserDetails != null)
+            if (user?.UserDetails != null)
             {
                 return new UserDetailsDTO()
                 {
