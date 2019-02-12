@@ -1,20 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using StoreReactNET.Services.Account;
 using StoreReactNET.Infrastructure.EntityFramework.Entities;
 using StoreReactNET.Services;
-using StoreReactNET.Services.Account.Models;
+using StoreReactNET.Services.Account;
 using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
 using StoreReactNET.Services.Product.Models.Outputs;
 
-namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
+namespace StoreReactNET.Infrastructure.EntityFramework.Queries
 {
     public class AccountQueries : IAccountQueries
     {

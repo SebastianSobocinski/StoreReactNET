@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StoreReactNET.Infrastructure.EntityFramework;
-using StoreReactNET.Infrastructure.EntityFramework.Repositories;
+using StoreReactNET.Infrastructure.EntityFramework.Queries;
 using StoreReactNET.Services.Account;
 using StoreReactNET.Services.Product;
 using StoreReactNET.Services.Session;

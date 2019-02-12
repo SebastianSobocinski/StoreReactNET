@@ -20,7 +20,8 @@ namespace StoreReactNET.Services.Account
 
         public async Task<UserDTO> Login(string Email, string Password)
         {
-            return await _queries.GetUserByCredentialsAsync(Email, SHA256Service.GetHashedString(Password));
+            var result = await _queries.GetUserByCredentialsAsync(Email, SHA256Service.GetHashedString(Password));
+            return result;
         }
 
         public async Task Register(string Email, string Password)
@@ -48,7 +49,7 @@ namespace StoreReactNET.Services.Account
         {
             var addresses = await _queries.GetUserAddressesAsync(userID);
 
-            if (addresses.Count == 0)
+            if (addresses == null || addresses.Count == 0)
                 throw new Exception("Couldn't find any addresses");
             else
                 return addresses;
@@ -58,7 +59,7 @@ namespace StoreReactNET.Services.Account
         {
             var orders = await _queries.GetUserOrders(userID);
 
-            if (orders.Count == 0)
+            if (orders == null || orders.Count == 0)
                 throw new Exception("Couldn't find any orders");
             else
                 return orders;
