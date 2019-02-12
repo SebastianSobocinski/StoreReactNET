@@ -1,22 +1,21 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using StoreReactNET.Services.Account;
 using StoreReactNET.Infrastructure.EntityFramework.Entities;
 using StoreReactNET.Services;
-using StoreReactNET.Services.Account.Models;
+using StoreReactNET.Services.Account;
+using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
+using StoreReactNET.Services.Product.Models.Outputs;
 
-namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
+namespace StoreReactNET.Infrastructure.EntityFramework.Queries
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountQueries : IAccountQueries
     {
         private readonly StoreASPContext _context;
-        public AccountRepository(StoreASPContext context)
+        public AccountQueries(StoreASPContext context)
         {
             this._context = context;
         }
@@ -30,13 +29,14 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 
             if (result != null)
             {
-                return new UserDTO()
+                var respond = new UserDTO()
                 {
                     ID = result.Id.ToString(),
                     Email = result.Email,
-                    FirstName = result.UserDetails.Name,
-                    LastName = result.UserDetails.FullName
+                    FirstName = result.UserDetails?.Name ?? "",
+                    LastName = result.UserDetails?.FullName ?? ""
                 };
+                return respond;
             }
 
             return null;
@@ -55,8 +55,8 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                 {
                     ID = result.Id.ToString(),
                     Email = result.Email,
-                    FirstName = result.UserDetails.Name,
-                    LastName = result.UserDetails.FullName
+                    FirstName = result.UserDetails?.Name ?? "",
+                    LastName = result.UserDetails?.FullName ?? ""
                 };
             }
 
@@ -76,8 +76,8 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                 {
                     ID = result.Id.ToString(),
                     Email = result.Email,
-                    FirstName = result.UserDetails.Name,
-                    LastName = result.UserDetails.FullName
+                    FirstName = result.UserDetails?.Name ?? "",
+                    LastName = result.UserDetails?.FullName ?? ""
                 };
             }
 
@@ -92,6 +92,10 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                 Password = HashedPassword
             };
 
+            var user = await _context.Users.FirstOrDefaultAsync(c => c.Email == Email);
+            if (user != null)
+                return;
+
             await _context.Users.AddAsync(entry);
             await _context.SaveChangesAsync();
         }
@@ -103,7 +107,7 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
                     .Where(c => userID == c.Id.ToString())
                     .FirstOrDefaultAsync();
 
-            if (user.UserDetails != null)
+            if (user?.UserDetails != null)
             {
                 return new UserDetailsDTO()
                 {
@@ -197,6 +201,139 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
 
             return ordersDto;
 
+        }
+
+        public async Task<bool> SetUserDetails(int userId, UserDetailsViewModel userDetailsViewModel)
+        {
+            var user = await _context.Users
+                .Include(c => c.UserDetails)
+                .FirstOrDefaultAsync(c => c.Id == userId);
+
+            if (user == null)
+                return false;
+
+            if (user.UserDetailsId == null)
+            {
+                var entry = new UserDetails()
+                {
+                    Name = userDetailsViewModel.FirstName,
+                    FullName = userDetailsViewModel.LastName,
+                    DateOfBirth = userDetailsViewModel.DateOfBirth
+                };
+                await _context.UserDetails.AddAsync(entry);
+                await _context.SaveChangesAsync();
+                user.UserDetailsId = entry.Id;
+            }
+            else
+            {
+                user.UserDetails.Name = userDetailsViewModel.FirstName;
+                user.UserDetails.FullName = userDetailsViewModel.LastName;
+                user.UserDetails.DateOfBirth = userDetailsViewModel.DateOfBirth;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> SetAddress(int userId, UserAddressDTO userAddress)
+        {
+            if (userAddress.Id != null)
+            {
+                var result = await _context.UserAdresses
+                    .FirstOrDefaultAsync(
+                        c =>
+                            c.UserId == userId
+                            &&
+                            c.Id == userAddress.Id
+                    );
+                if (result != null)
+                {
+                    result.StreetName = userAddress.StreetName;
+                    result.HomeNr = userAddress.HomeNr;
+                    result.AppartmentNr = userAddress.AppartmentNr;
+                    result.Zipcode = userAddress.Zipcode;
+                    result.City = userAddress.City;
+                    result.Country = userAddress.Country;
+                }
+                else
+                    return false;
+            }
+            else
+            {
+                var entry = new UserAdresses()
+                {
+                    UserId = userId,
+                    StreetName = userAddress.StreetName,
+                    HomeNr = userAddress.HomeNr,
+                    AppartmentNr = userAddress.AppartmentNr,
+                    Zipcode = userAddress.Zipcode,
+                    City = userAddress.City,
+                    Country = userAddress.Country
+                };
+                await _context.UserAdresses.AddAsync(entry);
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RemoveUserAddress(int userId, int addressId)
+        {
+            var result = await _context.UserAdresses
+                .FirstOrDefaultAsync(
+                    c =>
+                        c.Id == addressId
+                        &&
+                        c.UserId == userId
+                );
+
+            if (result == null)
+                return false;
+
+            //sets user id null instead of delete entry
+            result.UserId = null;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> SubmitOrder(int userId, List<CartProductDTO> cart, SentOrderViewModel sentOrder)
+        {
+            var result = await _context.UserAdresses
+                .FirstOrDefaultAsync(
+                    c => 
+                        c.Id == sentOrder.AddressID
+                        &&
+                        c.UserId == userId
+                );
+
+            if (result == null || cart == null || cart.Count <= 0)
+                return false;
+
+            var orderEntry = new Orders()
+            {
+                UserId = userId,
+                UserAddressId = sentOrder.AddressID,
+                Date = DateTime.Now,
+                Status = 0
+            };
+            await _context.Orders.AddAsync(orderEntry);
+            await _context.SaveChangesAsync();
+
+            foreach (var item in cart)
+            {
+                var entryItem = new OrderItems()
+                {
+                    OrderId = orderEntry.Id,
+                    ProductId = int.Parse(item.ProductID),
+                    Quantity = item.Quantity
+                };
+                await _context.OrderItems.AddAsync(entryItem);
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

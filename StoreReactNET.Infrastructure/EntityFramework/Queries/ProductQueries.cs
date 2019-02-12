@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using StoreReactNET.Services;
@@ -11,12 +10,12 @@ using StoreReactNET.Services.Product;
 using StoreReactNET.Services.Product.Models.Inputs;
 using StoreReactNET.Services.Product.Models.Outputs;
 
-namespace StoreReactNET.Infrastructure.EntityFramework.Repositories
+namespace StoreReactNET.Infrastructure.EntityFramework.Queries
 {
-    public class ProductRepository : IProductRepository
+    public class ProductQueries : IProductQueries
     {
         private readonly StoreASPContext _context;
-        public ProductRepository(StoreASPContext context)
+        public ProductQueries(StoreASPContext context)
         {
             this._context = context;
         }

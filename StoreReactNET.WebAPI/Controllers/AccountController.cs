@@ -149,7 +149,7 @@ namespace StoreReactNET.WebAPI.Controllers
 
             return Json(respond);
         }
-        /*
+
         [HttpPost]
         public async Task<ActionResult> SetDetails([FromForm]UserDetailsViewModel collection)
         {
@@ -158,42 +158,12 @@ namespace StoreReactNET.WebAPI.Controllers
                 var session = HttpContext.Session.GetString("user");
                 if(session != null)
                 {
-                    
-                    var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
-
                     try
                     {
-                        var userDetails = await _accountService.GetUserDetails(uservm.ID);
-
+                        var uservm = JsonConvert.DeserializeObject<UserDTO>(session);
+                        await _accountService.SetUserDetails(int.Parse(uservm.ID), collection);
                     }
                     catch(Exception) { }
-                    var user = await db.Users
-                                       .Include(c => c.UserDetails)
-                                       .Where(c => uservm.ID == c.Id.ToString())
-                                       .FirstOrDefaultAsync();
-
-                    if(user.UserDetailsId == null)
-                    {
-                        var entry = new UserDetails()
-                        {
-                            Name = collection.FirstName,
-                            FullName = collection.LastName,
-                            DateOfBirth = collection.DateOfBirth
-                        };
-
-                        db.UserDetails.Add(entry);
-                        await db.SaveChangesAsync();
-                        user.UserDetailsId = entry.Id;
-                        await db.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        user.UserDetails.Name = collection.FirstName;
-                        user.UserDetails.FullName = collection.LastName;
-                        user.UserDetails.DateOfBirth = collection.DateOfBirth;
-
-                        await db.SaveChangesAsync();
-                    }
                 }
             }
 
@@ -201,62 +171,21 @@ namespace StoreReactNET.WebAPI.Controllers
             return Redirect("/");
         }
         [HttpPost]
-        public async Task<ActionResult> SetAddress([FromForm]UserAddressViewModel collection)
+        public async Task<ActionResult> SetAddress([FromForm]UserAddressDTO collection)
         {
             if (ModelState.IsValid)
             {
                 var session = HttpContext.Session.GetString("user");
                 if(session != null)
                 {
-                    var db = new StoreASPContext();
-                    var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
-
-
-
-                    if(collection.Id != null)
+                    try
                     {
-                        var result = await db.UserAdresses
-                                             .Where(
-                                                c => 
-                                                uservm.ID == c.UserId.ToString()
-                                                &&
-                                                collection.Id == c.Id
-                                                )
-                                             .FirstOrDefaultAsync();
+                        var uservm = JsonConvert.DeserializeObject<UserDTO>(session);
+                        await _accountService.SetAddress(int.Parse(uservm.ID), collection);
 
-                        if(result != null)
-                        {
-                            result.StreetName = collection.StreetName;
-                            result.HomeNr = collection.HomeNr;
-                            result.AppartmentNr = collection.AppartmentNr;
-                            result.Zipcode = collection.Zipcode;
-                            result.City = collection.City;
-                            result.Country = collection.Country;
-
-                            await db.SaveChangesAsync();
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            int userid = int.Parse(uservm.ID);
-                            var entry = new UserAdresses()
-                            {
-                                UserId = userid,
-                                StreetName = collection.StreetName,
-                                HomeNr = collection.HomeNr,
-                                AppartmentNr = collection.AppartmentNr,
-                                Zipcode = collection.Zipcode,
-                                City = collection.City,
-                                Country = collection.Country
-                            };
-                            await db.UserAdresses.AddAsync(entry);
-                            await db.SaveChangesAsync();
-                        }
-                        catch (Exception) { }
 
                     }
+                    catch(Exception) { }
                 }
             }
 
@@ -270,31 +199,20 @@ namespace StoreReactNET.WebAPI.Controllers
             {
                 success = false
             };
-            var session = HttpContext.Session.GetString("user");
 
+            var session = HttpContext.Session.GetString("user");
             if(session != null)
             {
-                var uservm = JsonConvert.DeserializeObject<UserViewModel>(session);
-
-                var db = new StoreASPContext();
-                var result = db.UserAdresses
-                               .Where(c =>
-                                    c.Id == Id
-                                    &&
-                                    uservm.ID == c.UserId.ToString()
-                                    )
-                               .FirstOrDefault();
-
-                if(result != null)
+                try
                 {
-                    result.UserId = null;
-                    await db.SaveChangesAsync();
-
+                    var uservm = JsonConvert.DeserializeObject<UserDTO>(session);
+                    await _accountService.RemoveUserAddress(int.Parse(uservm.ID), Id);
                     respond = new
                     {
                         success = true
                     };
                 }
+                catch (Exception) { }
             }
 
             return Json(respond);
@@ -309,56 +227,22 @@ namespace StoreReactNET.WebAPI.Controllers
 
                 if(sessionUser != null && sessionCart != null)
                 {
-                    var uservm = JsonConvert.DeserializeObject<UserViewModel>(sessionUser);
-                    var cartvm = JsonConvert.DeserializeObject<List<CartItemViewModel>>(sessionCart);
-
-                    var db = new StoreASPContext();
-
-                    var result = await db.UserAdresses
-                                        .Where(c =>
-                                            collection.AddressID == c.Id
-                                            &&
-                                            uservm.ID == c.UserId.ToString()
-                                            )
-                                        .FirstOrDefaultAsync();
-                    if(result != null)
+                    try
                     {
-                        try
-                        {
-                            var orderEntry = new Orders()
-                            {
-                                UserId = int.Parse(uservm.ID),
-                                UserAddressId = collection.AddressID,
-                                Date = DateTime.Now,
-                                Status = 0
-                            };
+                        var uservm = JsonConvert.DeserializeObject<UserDTO>(sessionUser);
+                        var cartvm = JsonConvert.DeserializeObject<List<CartProductDTO>>(sessionCart);
 
-                            await db.Orders.AddAsync(orderEntry);
-                            await db.SaveChangesAsync();
+                        await _accountService.SubmitOrder(int.Parse(uservm.ID), cartvm, collection);
 
-                            foreach (var item in cartvm)
-                            {
-                                var entryItem = new OrderItems()
-                                {
-                                    OrderId = orderEntry.Id,
-                                    ProductId = int.Parse(item.ProductID),
-                                    Quantity = item.Quantity
-                                };
-                                await db.OrderItems.AddAsync(entryItem);
-                            }
-                            await db.SaveChangesAsync();
-                            HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(new List<CartItemViewModel>()));
-
-                        }
-                        
-                        catch (Exception) { }
-                        
+                        //if succeded clear cart
+                        HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(new List<CartProductDTO>()));
                     }
+                    catch (Exception) { }
                 }
+
             }
             return Redirect("/");
         }
-        */
     }
     
 }

@@ -7,7 +7,7 @@ using StoreReactNET.Services.Product.Models.Outputs;
 
 namespace StoreReactNET.Services.Product
 {
-    public interface IProductRepository
+    public interface IProductQueries
     {
         Task<ProductDTO> GetProduct(int ProductID);
         Task<List<ProductDTO>> GetProductsByCategoryWithFilters(int categoryId, List<JSONProductFilter> filters);

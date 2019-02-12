@@ -9,8 +9,8 @@ namespace StoreReactNET.Services.Session
 {
     public class SessionService : ISessionService
     {
-        private readonly IProductRepository _repository;
-        public SessionService(IProductRepository repository)
+        private readonly IProductQueries _repository;
+        public SessionService(IProductQueries repository)
         {
             _repository = repository;
         }
