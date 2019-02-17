@@ -21,7 +21,11 @@ namespace StoreReactNET.Infrastructure.Tests
 
         public AccountQueriesTests()
         {
-            var context = new StoreASPContext();
+            var optionsBuilder = new DbContextOptionsBuilder<StoreASPContext>();
+            optionsBuilder.UseSqlServer(
+                @"Data Source=den1.mssql8.gear.host;Initial Catalog=storeasptests;User ID=storeasptests;Password=Sp3FG22Bkt_!");
+
+            var context = new StoreASPContext(optionsBuilder.Options);
 
             _context = context;
             _accountQueries = new AccountQueries(
@@ -149,7 +153,7 @@ namespace StoreReactNET.Infrastructure.Tests
         [Test]
         public async Task GetUserOrders_UserDoesHaveOrders_ShouldReturnOrdersList()
         {
-            var userId = "1";
+            var userId = (await _context.Orders.FirstOrDefaultAsync()).UserId.ToString();
 
             var orders = await _accountQueries.GetUserOrders(userId);
 

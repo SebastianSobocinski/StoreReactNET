@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{86A58045
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreReactNET.Infrastructure.Tests", "StoreReactNET.Infrastructure.Tests\StoreReactNET.Infrastructure.Tests.csproj", "{BCD663FC-D9DB-4974-AD1C-6705893C88BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreReactNET.Services.Tests", "StoreReactNET.Services.Tests\StoreReactNET.Services.Tests.csproj", "{09146C87-39EE-462C-8C0E-3A37F263CA89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreReactNET.Services.Tests", "StoreReactNET.Services.Tests\StoreReactNET.Services.Tests.csproj", "{09146C87-39EE-462C-8C0E-3A37F263CA89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreReactNET.WebAPI.Tests", "StoreReactNET.WebAPI.Tests\StoreReactNET.WebAPI.Tests.csproj", "{A0413F69-90AD-4219-8FD4-7D664A902425}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{09146C87-39EE-462C-8C0E-3A37F263CA89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09146C87-39EE-462C-8C0E-3A37F263CA89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09146C87-39EE-462C-8C0E-3A37F263CA89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0413F69-90AD-4219-8FD4-7D664A902425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0413F69-90AD-4219-8FD4-7D664A902425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0413F69-90AD-4219-8FD4-7D664A902425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0413F69-90AD-4219-8FD4-7D664A902425}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BCD663FC-D9DB-4974-AD1C-6705893C88BF} = {86A58045-B4AB-417E-AF7C-F0659E52C195}
 		{09146C87-39EE-462C-8C0E-3A37F263CA89} = {86A58045-B4AB-417E-AF7C-F0659E52C195}
+		{A0413F69-90AD-4219-8FD4-7D664A902425} = {86A58045-B4AB-417E-AF7C-F0659E52C195}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BE58B86E-0460-4230-8F7C-FF96147FE9E8}
