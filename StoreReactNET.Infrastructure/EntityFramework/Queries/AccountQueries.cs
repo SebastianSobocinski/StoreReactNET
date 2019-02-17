@@ -172,6 +172,7 @@ namespace StoreReactNET.Infrastructure.EntityFramework.Queries
                         .Where(c => c.Id == product.ProductId)
                         .FirstOrDefaultAsync();
 
+                    if(dbproduct == null) continue;
                     //creating new entry to temp list
                     var entry = new OrderItemDTO
                     {

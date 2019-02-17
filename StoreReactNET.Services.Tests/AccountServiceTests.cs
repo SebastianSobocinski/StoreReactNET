@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using StoreReactNET.Services.Account;
+using StoreReactNET.Services.Account.Models.Inputs;
 using StoreReactNET.Services.Account.Models.Outputs;
+using StoreReactNET.Services.Product.Models.Outputs;
 using Assert = NUnit.Framework.Assert;
 
 namespace StoreReactNET.Services.Tests
@@ -46,6 +49,22 @@ namespace StoreReactNET.Services.Tests
                     StreetName = "TestStreetName"
                 }
             });
+            _queries.Setup(c => c.GetUserOrders("1")).ReturnsAsync(new List<OrderDTO>
+            {
+                new OrderDTO()
+                {
+                    OrderID = 123
+                }
+            });
+            _queries.Setup(c => c.SetUserDetails(1, It.IsAny<UserDetailsViewModel>()))
+                .ReturnsAsync(true);
+            _queries.Setup(c => c.SetAddress(1, It.IsAny<UserAddressDTO>()))
+                .ReturnsAsync(true);
+            _queries.Setup(c => c.RemoveUserAddress(1, 1))
+                .ReturnsAsync(true);
+            _queries.Setup(c => c.SubmitOrder(1, It.IsAny<List<CartProductDTO>>(), It.IsAny<SentOrderViewModel>()))
+                .ReturnsAsync(true);
+
             _service = new AccountService(_queries.Object);
         }
         [Test]
@@ -127,12 +146,120 @@ namespace StoreReactNET.Services.Tests
 
             Assert.That(ex.Message, Is.EqualTo("Couldn't find any addresses"));
         }
-
+        [Test]
         public async Task GetUserLatestOrders_UserDoesHaveOrders_ShouldReturnOrderList()
         {
+            var userId = "1";
 
+            var result = await _service.GetUserLatestOrders(userId);
+
+            Assert.That(result[0].OrderID == 123);
         }
 
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public async Task GetUserLatestOrders_UserDoesntHaveOrders_ShouldThrowException()
+        {
+            var userId = "555";
+
+            var ex = Assert.ThrowsAsync<Exception>(async () => 
+                await _service.GetUserLatestOrders(userId));
+
+            Assert.That(ex.Message, Is.EqualTo("Couldn't find any orders"));
+        }
+
+        [Test]
+        public async Task SetUserDetails_UserExists_ShouldSuccess()
+        {
+            var userId = 1;
+
+            await _service.SetUserDetails(1, new UserDetailsViewModel());
+
+            Assert.That(true);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public async Task SetUserDetails_UserDoesntExists_ShouldThrowException()
+        {
+            var userId = 2;
+
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _service.SetUserDetails(userId, new UserDetailsViewModel()));
+
+            Assert.That(ex.Message, Is.EqualTo("Couldn't set user details!"));
+        }
+        [Test]
+        public async Task SetAddress_UserExists_ShouldSuccess()
+        {
+            var userId = 1;
+
+            await _service.SetAddress(1, new UserAddressDTO());
+
+            Assert.That(true);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public async Task SetAddress_UserDoesntExists_ShouldThrowException()
+        {
+            var userId = 2;
+
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _service.SetAddress(userId, new UserAddressDTO()));
+
+            Assert.That(ex.Message, Is.EqualTo("Couldn't set user address!"));
+        }
+        [Test]
+        public async Task RemoveUserAddress_UserAndAddressExists_ShouldSuccess()
+        {
+            var userId = 1;
+            var addressId = 1;
+
+            await _service.RemoveUserAddress(userId, addressId);
+
+            Assert.That(true);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public async Task RemoveUserAddress_UserOrAddressDoesntExists_ShouldThrowException()
+        {
+
+            var userId = 1;
+            var addressId = 2;
+
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _service.RemoveUserAddress(userId, addressId));
+
+            Assert.That(ex.Message, Is.EqualTo("Couldn't remove user address!"));
+        }
+
+        [Test]
+        public async Task SubmitOrder_CorrectInputs_ShouldSuccess()
+        {
+            var userId = 1;
+            var cart = new List<CartProductDTO>();
+            var sentOrder = new SentOrderViewModel();
+
+            await _service.SubmitOrder(userId, cart, sentOrder);
+
+            Assert.That(true);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Exception))]
+        public async Task SubmitOrder_UserDoesntExists_ShouldThrowException()
+        {
+            var userId = 2;
+            var cart = new List<CartProductDTO>();
+            var sentOrder = new SentOrderViewModel();
+
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _service.SubmitOrder(userId, cart, sentOrder));
+
+            Assert.That(ex.Message, Is.EqualTo("Couldn't submit order!"));
+        }
 
     }
 }
