@@ -23,7 +23,7 @@ namespace StoreReactNET.Infrastructure.Tests
         {
             var optionsBuilder = new DbContextOptionsBuilder<StoreASPContext>();
             optionsBuilder.UseSqlServer(
-                @"Data Source=(localdb)\v14.0;Initial Catalog=storeasp_tests;Integrated Security=True");
+                @"Data Source=den1.mssql8.gear.host;Initial Catalog=storeasptests;User ID=storeasptests;Password=Sp3FG22Bkt_!");
 
             var context = new StoreASPContext(optionsBuilder.Options);
 
